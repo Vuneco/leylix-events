@@ -10,6 +10,68 @@
     input, textarea, select { width: 100%; padding: 8px; margin-top: 5px; border-radius: 4px; border: 1px solid #ccc; }
     .hidden { display: none; }
     button { margin-top: 20px; background: #800000; color: white; padding: 10px; border: none; border-radius: 6px; cursor: pointer; }
+
+    <style>
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+    animation: fadeIn 0.3s ease-in-out forwards;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal-content {
+    position: relative;
+    margin: auto;
+    padding: 0;
+    width: 90%;
+    max-width: 800px;
+    animation: zoomIn 0.3s ease-in-out forwards;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal-content img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+  }
+
+  .close {
+    position: absolute;
+    top: 16px;
+    right: 24px;
+    color: white;
+    font-size: 32px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .close:hover {
+    color: #bbb;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  @keyframes zoomIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+</style>
+
   </style>
 </head>
 <body>
@@ -82,7 +144,14 @@
 
     <label>Bild oder Video (optional)</label>
     <input type="file" accept="image/*,video/*" id="fileInput" onchange="previewImage()" />
-    <img id="preview" src="" style="max-width: 300px; margin-top: 10px;" />
+<img id="preview" src="" style="max-width: 300px; margin-top: 10px; cursor: pointer;" onclick="openModal()" />
+
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">×</span>
+    <img id="modalImage" src="" />
+  </div>
+</div>
 
     <input type="hidden" name="imageUrl" id="uploadedImageUrl" />
 
@@ -186,7 +255,7 @@ if (file.size > MAX_FILE_SIZE) {
       .catch(() => alert("❌ Fehler beim Absenden"));
     });
   </script>
-  <script>
+ <script>
   function previewImage() {
     const fileInput = document.getElementById("fileInput");
     const file = fileInput.files[0];
@@ -195,17 +264,32 @@ if (file.size > MAX_FILE_SIZE) {
       const reader = new FileReader();
       reader.onload = function(e) {
         document.getElementById("preview").src = e.target.result;
+        document.getElementById("modalImage").src = e.target.result;
       };
       reader.readAsDataURL(file);
-    } else {
-      document.getElementById("preview").src = "";
     }
+  }
+
+  function openModal() {
+    const modal = document.getElementById("modal");
+    modal.style.display = "flex";
+  }
+
+  function closeModal() {
+    const modal = document.getElementById("modal");
+    modal.style.animation = "none"; // Reset animation
+    modal.offsetHeight; // Force reflow
+    modal.style.animation = "fadeIn 0.3s ease-in-out forwards";
+    modal.style.display = "none";
   }
 </script>
 
 
+
+
 </body>
 </html>
+
 
 
 
