@@ -88,7 +88,10 @@
 
     <!-- Upload -->
     <label>Bild oder Video (optional)</label>
-    <input type="file" accept="image/*,video/*" onchange="handleFileUpload(event)" />
+    
+    <input type="file" accept="image/*,video/*" id="fileInput" />
+    <button type="button" onclick="uploadFile()">📤 Bild/Video hochladen</button>
+
     <input type="hidden" name="imageUrl" id="uploadedImageUrl" />
 
     <!-- AGB -->
@@ -158,9 +161,11 @@ async function handleFileUpload(event) {
 <button onclick="uploadFile()">Jetzt hochladen</button>
 <br><br>
 <img id="preview" src="" style="max-width: 300px;" />
-<input type="text" id="imageUrl" readonly />
+<input type="text" id="imageUrl" name="imageUrl" readonly />
+
 
 </body>
 </html>
+
 
 
