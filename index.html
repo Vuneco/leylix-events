@@ -81,7 +81,9 @@
     <input type="url" name="link" />
 
     <label>Bild oder Video (optional)</label>
-    <input type="file" accept="image/*,video/*" id="fileInput" />
+    <input type="file" accept="image/*,video/*" id="fileInput" onchange="previewImage()" />
+    <img id="preview" src="" style="max-width: 300px; margin-top: 10px;" />
+
     <input type="hidden" name="imageUrl" id="uploadedImageUrl" />
 
     <label><input type="checkbox" required /> Ich akzeptiere die AGB</label>
@@ -184,9 +186,27 @@ if (file.size > MAX_FILE_SIZE) {
       .catch(() => alert("❌ Fehler beim Absenden"));
     });
   </script>
+  <script>
+  function previewImage() {
+    const fileInput = document.getElementById("fileInput");
+    const file = fileInput.files[0];
+
+    if (file && file.type.startsWith("image/")) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById("preview").src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    } else {
+      document.getElementById("preview").src = "";
+    }
+  }
+</script>
+
 
 </body>
 </html>
+
 
 
 
