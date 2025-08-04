@@ -11,7 +11,7 @@
     .hidden { display: none; }
     button { margin-top: 20px; background: #800000; color: white; padding: 10px; border: none; border-radius: 6px; cursor: pointer; }
 
-    <style>
+    
   .modal {
     display: none;
     position: fixed;
@@ -20,19 +20,16 @@
     top: 0;
     width: 100%;
     height: 100%;
-    overflow: auto;
     background-color: rgba(0, 0, 0, 0.8);
-    animation: fadeIn 0.3s ease-in-out forwards;
     justify-content: center;
     align-items: center;
+    animation: fadeIn 0.3s ease-in-out forwards;
   }
 
   .modal-content {
     position: relative;
-    margin: auto;
-    padding: 0;
-    width: 90%;
-    max-width: 800px;
+    max-width: 90%;
+    max-height: 90%;
     animation: zoomIn 0.3s ease-in-out forwards;
     display: flex;
     justify-content: center;
@@ -40,25 +37,29 @@
   }
 
   .modal-content img {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 10px;
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
   }
 
   .close {
     position: absolute;
-    top: 16px;
-    right: 24px;
-    color: white;
-    font-size: 32px;
+    top: -10px;
+    right: -10px;
+    background-color: white;
+    color: black;
+    font-size: 28px;
     font-weight: bold;
+    border-radius: 50%;
+    padding: 2px 12px;
     cursor: pointer;
     transition: 0.3s;
   }
 
   .close:hover {
-    color: #bbb;
+    background-color: red;
+    color: white;
   }
 
   @keyframes fadeIn {
@@ -67,10 +68,9 @@
   }
 
   @keyframes zoomIn {
-    from { transform: scale(0.8); opacity: 0; }
+    from { transform: scale(0.85); opacity: 0; }
     to   { transform: scale(1); opacity: 1; }
   }
-</style>
 
   </style>
 </head>
@@ -143,9 +143,10 @@
     <input type="url" name="link" />
 
     <label>Bild oder Video (optional)</label>
-    <input type="file" accept="image/*,video/*" id="fileInput" onchange="previewImage()" />
-<img id="preview" src="" style="max-width: 300px; margin-top: 10px; cursor: pointer;" onclick="openModal()" />
+    <input type="file" accept="image/*" id="fileInput" onchange="previewImage()" />
+<img id="preview" src="" style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal()" />
 
+<!-- Modal -->
 <div id="modal" class="modal">
   <div class="modal-content">
     <span class="close" onclick="closeModal()">×</span>
@@ -263,24 +264,22 @@ if (file.size > MAX_FILE_SIZE) {
     if (file && file.type.startsWith("image/")) {
       const reader = new FileReader();
       reader.onload = function(e) {
-        document.getElementById("preview").src = e.target.result;
-        document.getElementById("modalImage").src = e.target.result;
+        const preview = document.getElementById("preview");
+        const modalImage = document.getElementById("modalImage");
+        preview.src = e.target.result;
+        modalImage.src = e.target.result;
+        preview.style.display = "block"; // Zeige kleine Vorschau
       };
       reader.readAsDataURL(file);
     }
   }
 
   function openModal() {
-    const modal = document.getElementById("modal");
-    modal.style.display = "flex";
+    document.getElementById("modal").style.display = "flex";
   }
 
   function closeModal() {
-    const modal = document.getElementById("modal");
-    modal.style.animation = "none"; // Reset animation
-    modal.offsetHeight; // Force reflow
-    modal.style.animation = "fadeIn 0.3s ease-in-out forwards";
-    modal.style.display = "none";
+    document.getElementById("modal").style.display = "none";
   }
 </script>
 
@@ -289,6 +288,7 @@ if (file.size > MAX_FILE_SIZE) {
 
 </body>
 </html>
+
 
 
 
