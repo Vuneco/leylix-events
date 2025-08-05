@@ -5,12 +5,84 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Event-Anmeldung</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; max-width: 700px; margin: auto; }
-    label { display: block; margin-top: 15px; font-weight: bold; }
-    input, textarea, select { width: 100%; padding: 8px; margin-top: 5px; border-radius: 4px; border: 1px solid #ccc; }
-    .hidden { display: none; }
-    button { margin-top: 20px; background: #800000; color: white; padding: 10px; border: none; border-radius: 6px; cursor: pointer; }
+    :root {
+    --main-color: #800000;
+    --bg: #f9f9f9;
+    --radius: 8px;
+  }
 
+  body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    margin: auto;
+    background: var(--bg);
+    max-width: 900px;
+  }
+
+  h2 {
+    text-align: center;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  label {
+    font-weight: bold;
+    margin-top: 10px;
+  }
+
+  input, textarea, select {
+    width: 100%;
+    padding: 10px;
+    border-radius: var(--radius);
+    border: 1px solid #ccc;
+    font-size: 1em;
+  }
+
+  .grid-2, .grid-3 {
+    display: grid;
+    gap: 16px;
+  }
+
+  .grid-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .grid-3 {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+
+  button {
+    background: var(--main-color);
+    color: white;
+    padding: 12px;
+    font-size: 1em;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    width: fit-content;
+    align-self: center;
+  }
+
+  .checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  @media (max-width: 600px) {
+    .grid-2, .grid-3 {
+      grid-template-columns: 1fr;
+    }
+  }
     
   .modal {
     display: none;
@@ -88,77 +160,101 @@
       <option value="equipment">🎪 Equipment vermieten</option>
     </select>
 
+    <div class="grid-2">
+  <div>
     <label>Vorname*</label>
     <input type="text" name="vorname" required />
+  </div>
+  <div>
     <label>Nachname*</label>
     <input type="text" name="nachname" required />
-    <label>Telefonnummer*</label>
-    <input type="tel" name="telefon" required placeholder="+49 170 1234567" />
-    <label>E-Mail-Adresse*</label>
-    <input type="email" name="email" required />
-
-    <div id="eventSection" class="hidden">
-      <label>Event-Titel*</label>
-      <input type="text" name="titel" />
-      <label>Straße*</label>
-      <input type="text" name="strasse" />
-      <label>PLZ*</label>
-      <input type="text" name="plz" />
-      <label>Ort*</label>
-      <input type="text" name="ort" />
-      <label>Datum*</label>
-      <input type="date" name="datum" />
-      <label>Uhrzeit*</label>
-      <input type="time" name="uhrzeit" />
-      <label>Kategorie*</label>
-      <select name="kategorie">
-        <option>🎭 Kultur</option>
-        <option>⚽ Sport</option>
-        <option>🍔 Food</option>
-        <option>🎶 Musik</option>
-        <option>👪 Familie</option>
-        <option>🎉 Party</option>
-        <option>🧠 Wissen & Quiz</option>
-        <option>💼 Business</option>
-      </select>
-      <label>Eventbeschreibung*</label>
-      <textarea name="beschreibung" rows="4"></textarea>
-    </div>
-
-    <div id="djSection" class="hidden">
-      <label>Künstlername</label>
-      <input type="text" name="kuenstlername" />
-      <label>Beschreibung</label>
-      <textarea name="djbeschreibung" rows="4"></textarea>
-    </div>
-
-    <div id="equipmentSection" class="hidden">
-      <label>Equipment-Titel</label>
-      <input type="text" name="equipmentTitel" />
-      <label>Beschreibung</label>
-      <textarea name="equipmentbeschreibung" rows="4"></textarea>
-    </div>
-
-    <label>Externer Link (optional)</label>
-    <input type="url" name="link" />
-
-    <label>Bild oder Video (optional)</label>
-    <input type="file" accept="image/*" id="fileInput" onchange="previewImage()" />
-<img id="preview" src="" style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal()" />
-
-<!-- Modal -->
-<div id="modal" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal()">×</span>
-    <img id="modalImage" src="" />
   </div>
 </div>
 
-    <input type="hidden" name="imageUrl" id="uploadedImageUrl" />
+<div class="grid-2">
+  <div>
+    <label>Telefonnummer*</label>
+    <input type="tel" name="telefon" required placeholder="+49 170 1234567" />
+  </div>
+  <div>
+    <label>E-Mail-Adresse*</label>
+    <input type="email" name="email" required />
+  </div>
+</div>
 
-    <label><input type="checkbox" required /> Ich akzeptiere die AGB</label>
+<div class="grid-3">
+  <div>
+    <label>Event-Titel*</label>
+    <input type="text" name="titel" required />
+  </div>
+  <div>
+    <label>Straße*</label>
+    <input type="text" name="strasse" required />
+  </div>
+  <div>
+    <label>Hausnummer*</label>
+    <input type="text" name="hausnummer" required />
+  </div>
+  <div>
+    <label>PLZ*</label>
+    <input type="text" name="plz" required />
+  </div>
+  <div>
+    <label>Ort*</label>
+    <input type="text" name="ort" required />
+  </div>
+</div>
 
-    <button type="submit">✅ Abschicken</button>
+<div class="grid-2">
+  <div>
+    <label>Datum*</label>
+    <input type="date" name="datum" required />
+  </div>
+  <div>
+    <label>Uhrzeit*</label>
+    <input type="time" name="uhrzeit" required />
+  </div>
+</div>
+
+<div>
+  <label>Kategorie*</label>
+  <select name="kategorie" required>
+    <option value="">Bitte wählen</option>
+    <option>🎭 Kultur</option>
+    <option>⚽ Sport</option>
+    <option>🍔 Food</option>
+    <option>🎶 Musik</option>
+    <option>👪 Familie</option>
+    <option>🎉 Party</option>
+    <option>🧠 Wissen & Quiz</option>
+    <option>💼 Business</option>
+  </select>
+</div>
+
+<div>
+  <label>Eventbeschreibung*</label>
+  <textarea name="beschreibung" rows="4" required></textarea>
+</div>
+
+<div>
+  <label>Externer Link (optional)</label>
+  <input type="url" name="link" placeholder="Für weitere Informationen" />
+</div>
+
+<div class="grid-2">
+  <div>
+    <label>Bild oder Video (optional)</label>
+    <input type="file" accept="image/*,video/*" name="mediafile" />
+  </div>
+</div>
+
+<div class="checkbox-container">
+  <input type="checkbox" required id="agbCheck" />
+  <label for="agbCheck">Ich akzeptiere die AGB & Datenschutzbestimmungen</label>
+</div>
+
+<button type="submit">Event einreichen</button>
+
   </form>
 
   <script>
@@ -304,6 +400,7 @@ if (file.size > MAX_FILE_SIZE) {
 
 </body>
 </html>
+
 
 
 
