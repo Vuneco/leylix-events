@@ -242,14 +242,16 @@
 </div>
 
 <label>Bild oder Video (optional)</label>
-    <input type="file" accept="image/*" id="fileInput" onchange="previewImage()" />
-<img id="preview" src="" style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal()" />
+<input type="file" accept="image/*,video/*" id="fileInput" onchange="previewMedia()" />
+<img id="preview" style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal('image')" />
+<video id="previewVideo" controls style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal('video')"></video>
 
 <!-- Modal -->
 <div id="modal" class="modal">
   <div class="modal-content">
     <span class="close" onclick="closeModal()">×</span>
-    <img id="modalImage" src="" />
+    <img id="modalImage" />
+    <video id="modalVideo" controls></video>
   </div>
 </div>
 
@@ -360,17 +362,24 @@ if (file.size > MAX_FILE_SIZE) {
 
     // Bild-Preview und Modal-Bild zurücksetzen
     const preview = document.getElementById("preview");
+const previewVideo = document.getElementById("previewVideo");
 const modalImage = document.getElementById("modalImage");
+const modalVideo = document.getElementById("modalVideo");
 const modal = document.getElementById("modal");
 
-// Bild-Preview zurücksetzen
+// Preview zurücksetzen
 if (preview) {
   preview.src = "";
   preview.style.display = "none";
 }
+if (previewVideo) {
+  previewVideo.src = "";
+  previewVideo.style.display = "none";
+}
 
-// Modal-Inhalte zurücksetzen
+// Modal zurücksetzen
 if (modalImage) modalImage.src = "";
+if (modalVideo) modalVideo.src = "";
 if (modal) modal.style.display = "none";
 
 // FileInput leeren
@@ -382,22 +391,52 @@ if (fileInput) fileInput.value = "";
 
   </script>
  <script>
-  function previewImage() {
-    const fileInput = document.getElementById("fileInput");
-    const file = fileInput.files[0];
+  function previewMedia() {
+  const fileInput = document.getElementById("fileInput");
+  const file = fileInput.files[0];
+  const preview = document.getElementById("preview");
+  const previewVideo = document.getElementById("previewVideo");
 
-    if (file && file.type.startsWith("image/")) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const preview = document.getElementById("preview");
-        const modalImage = document.getElementById("modalImage");
-        preview.src = e.target.result;
-        modalImage.src = e.target.result;
-        preview.style.display = "block"; // Zeige kleine Vorschau
-      };
-      reader.readAsDataURL(file);
-    }
+  if (!file) return;
+
+  if (file.type.startsWith("image/")) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      preview.src = e.target.result;
+      preview.style.display = "block";
+      previewVideo.style.display = "none";
+    };
+    reader.readAsDataURL(file);
+  } else if (file.type.startsWith("video/")) {
+    const url = URL.createObjectURL(file);
+    previewVideo.src = url;
+    previewVideo.style.display = "block";
+    preview.style.display = "none";
   }
+}
+
+function openModal(type) {
+  const modal = document.getElementById("modal");
+  const modalImage = document.getElementById("modalImage");
+  const modalVideo = document.getElementById("modalVideo");
+  const preview = document.getElementById("preview");
+  const previewVideo = document.getElementById("previewVideo");
+
+  modal.style.display = "flex";
+  if (type === "image") {
+    modalImage.src = preview.src;
+    modalImage.style.display = "block";
+    modalVideo.style.display = "none";
+  } else {
+    modalVideo.src = previewVideo.src;
+    modalVideo.style.display = "block";
+    modalImage.style.display = "none";
+  }
+}
+
+function closeModal() {
+  document.getElementById("modal").style.display = "none";
+}
 
   function openModal() {
     document.getElementById("modal").style.display = "flex";
@@ -429,6 +468,7 @@ if (fileInput) fileInput.value = "";
 
 </body>
 </html>
+
 
 
 
