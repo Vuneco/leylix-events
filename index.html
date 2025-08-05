@@ -225,36 +225,52 @@ if (file.size > MAX_FILE_SIZE) {
     }
 
     document.getElementById("eventForm").addEventListener("submit", async function(e) {
-      e.preventDefault();
-      const form = e.target;
-      const fileInput = document.getElementById('fileInput');
-      let uploadedImageUrl = "";
+  e.preventDefault();
+  const form = e.target;
+  const fileInput = document.getElementById('fileInput');
+  let uploadedImageUrl = "";
 
-      if (fileInput.files.length > 0) {
-        uploadedImageUrl = await uploadFile(fileInput.files[0]);
-      }
-      
-      if (fileInput.files.length > 0 && !uploadedImageUrl) {
-        // Abbruch, wenn der Upload fehlgeschlagen ist
-        return;
-      }
-      
-      const formData = new FormData(form);
-      if (uploadedImageUrl) {
-        formData.set("imageUrl", uploadedImageUrl);
-      }
+  if (fileInput.files.length > 0) {
+    uploadedImageUrl = await uploadFile(fileInput.files[0]);
+  }
 
-      fetch(form.action, {
-        method: "POST",
-        body: formData
-      })
-      .then(() => {
-        alert("✅ Erfolgreich gesendet!");
-        form.reset();
-        updateFormSections();
-      })
-      .catch(() => alert("❌ Fehler beim Absenden"));
-    });
+  if (fileInput.files.length > 0 && !uploadedImageUrl) {
+    // Abbruch, wenn der Upload fehlgeschlagen ist
+    return;
+  }
+
+  const formData = new FormData(form);
+  if (uploadedImageUrl) {
+    formData.set("imageUrl", uploadedImageUrl);
+  }
+
+  fetch(form.action, {
+    method: "POST",
+    body: formData
+  })
+  .then(() => {
+    alert("✅ Erfolgreich gesendet!");
+
+    // Formular zurücksetzen
+    form.reset();
+    updateFormSections();
+
+    // Bild-Preview und Modal-Bild zurücksetzen
+    const preview = document.getElementById("preview");
+    const modalImage = document.getElementById("modalImage");
+    preview.src = "";
+    preview.style.display = "none";
+    modalImage.src = "";
+
+    // FileInput leeren
+    fileInput.value = "";
+
+    // Modal schließen (falls es offen war)
+    closeModal();
+  })
+  .catch(() => alert("❌ Fehler beim Absenden"));
+});
+
   </script>
  <script>
   function previewImage() {
@@ -288,6 +304,7 @@ if (file.size > MAX_FILE_SIZE) {
 
 </body>
 </html>
+
 
 
 
