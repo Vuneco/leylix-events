@@ -391,7 +391,7 @@ if (fileInput) fileInput.value = "";
 
   </script>
  <script>
-  function previewMedia() {
+function previewMedia() {
   const fileInput = document.getElementById("fileInput");
   const file = fileInput.files[0];
   const preview = document.getElementById("preview");
@@ -435,17 +435,16 @@ function openModal(type) {
 }
 
 function closeModal() {
-  document.getElementById("modal").style.display = "none";
+  const modal = document.getElementById("modal");
+  const modalImage = document.getElementById("modalImage");
+  const modalVideo = document.getElementById("modalVideo");
+
+  modal.style.display = "none";
+  modalImage.src = "";
+  modalVideo.src = "";
 }
-
-  function openModal() {
-    document.getElementById("modal").style.display = "flex";
-  }
-
-  function closeModal() {
-    document.getElementById("modal").style.display = "none";
-  }
 </script>
+
 <script src="https://unpkg.com/@studio-freight/lenis@1.0.18/bundled/lenis.min.js"></script>
 <script>
   //Ab hier ist wegen smooze scrolling! Es dürfen aber keine anderen codes für diese geste sein. Wenn doch funktioniert es nicht richtig!!!
@@ -468,6 +467,7 @@ function closeModal() {
 
 </body>
 </html>
+
 
 
 
