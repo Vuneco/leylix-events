@@ -106,6 +106,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 10;
   }
 
   .modal-content img {
@@ -114,6 +115,12 @@
     border-radius: 10px;
     box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
   }
+    .modal-content video {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 10px;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+}
 
   .close {
     position: absolute;
@@ -127,6 +134,7 @@
     padding: 2px 12px;
     cursor: pointer;
     transition: 0.3s;
+    z-index: 9999;
   }
 
   .close:hover {
@@ -508,6 +516,7 @@ function closeModal() {
 
 </body>
 </html>
+
 
 
 
