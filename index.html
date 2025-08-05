@@ -241,12 +241,19 @@
   <input type="url" name="link" placeholder="Für weitere Informationen" />
 </div>
 
-<div class="grid-2">
-  <div>
-    <label>Bild oder Video (optional)</label>
-    <input type="file" accept="image/*,video/*" name="mediafile" />
+<label>Bild oder Video (optional)</label>
+    <input type="file" accept="image/*" id="fileInput" onchange="previewImage()" />
+<img id="preview" src="" style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal()" />
+
+<!-- Modal -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">×</span>
+    <img id="modalImage" src="" />
   </div>
 </div>
+
+    <input type="hidden" name="imageUrl" id="uploadedImageUrl" />
 
 <div class="checkbox-container">
   <input type="checkbox" required id="agbCheck" />
@@ -416,6 +423,7 @@ if (file.size > MAX_FILE_SIZE) {
 
 </body>
 </html>
+
 
 
 
