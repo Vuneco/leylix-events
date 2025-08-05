@@ -360,16 +360,22 @@ if (file.size > MAX_FILE_SIZE) {
 
     // Bild-Preview und Modal-Bild zurücksetzen
     const preview = document.getElementById("preview");
-    const modalImage = document.getElementById("modalImage");
-    preview.src = "";
-    preview.style.display = "none";
-    modalImage.src = "";
+const modalImage = document.getElementById("modalImage");
+const modal = document.getElementById("modal");
 
-    // FileInput leeren
-    fileInput.value = "";
+// Bild-Preview zurücksetzen
+if (preview) {
+  preview.src = "";
+  preview.style.display = "none";
+}
 
-    // Modal schließen (falls es offen war)
-    closeModal();
+// Modal-Inhalte zurücksetzen
+if (modalImage) modalImage.src = "";
+if (modal) modal.style.display = "none";
+
+// FileInput leeren
+if (fileInput) fileInput.value = "";
+
   })
   .catch(() => alert("❌ Fehler beim Absenden"));
 });
@@ -423,6 +429,7 @@ if (file.size > MAX_FILE_SIZE) {
 
 </body>
 </html>
+
 
 
 
