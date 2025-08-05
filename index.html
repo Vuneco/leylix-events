@@ -143,6 +143,24 @@
     from { transform: scale(0.85); opacity: 0; }
     to   { transform: scale(1); opacity: 1; }
   }
+    .grid-3-wide {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 16px;
+}
+
+.grid-2-even {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 700px) {
+  .grid-3-wide, .grid-2-even {
+    grid-template-columns: 1fr;
+  }
+}
+
 
   </style>
 </head>
@@ -187,6 +205,8 @@
     <label>Event-Titel*</label>
     <input type="text" name="titel" required />
   </div>
+  <div>
+    <div class="grid-3-wide">
   <div>
     <label>Straße*</label>
     <input type="text" name="strasse" required />
@@ -467,6 +487,7 @@ function closeModal() {
 
 </body>
 </html>
+
 
 
 
