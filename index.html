@@ -250,7 +250,15 @@
   object-fit: cover;
   display: block;
 }
+.input-group {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
 
+.input-group > div {
+  flex: 1 1 200px; /* Grow + Shrink + min. 200px */
+}
 
 
   </style>
@@ -275,11 +283,11 @@
     </select>
 
 
-    <div class="grid-2" style="display: flex; gap: 60px;">
-    <div style="flex: 1">
-    <label>Vorname*</label>
-    <input type="text" name="vorname" required />
-  </div>
+    <div class="input-group">
+  <div>
+    <label>Vorname</label>
+    <input type="text" />
+  </div>  
   <div>
     <label>Nachname*</label>
     <input type="text" name="nachname" required />
@@ -588,6 +596,7 @@ function closeModal() {
 
 </body>
 </html>
+
 
 
 
