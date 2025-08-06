@@ -310,89 +310,20 @@
   from { transform: scale(0.8); opacity: 0; }
   to   { transform: scale(1); opacity: 1; }
 }
-    .background-slideshow {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  z-index: -1;
-  background-size: cover;
-  background-position: center;
-  animation: slideshow 35s infinite;
-  transition: background-image 1s ease-in-out;
-  pointer-events: none;
-  opacity: 0.3; /* du kannst hier transparenter oder kräftiger machen */
-  filter: brightness(0.9);
-  backdrop-filter: blur(1px);
-}
-
-@keyframes slideshow {
-  0%    { background-image: url('assets/MessagePreview.jpeg'); }
-  20%   { background-image: url('assets/WebEventPoster.png'); }
-  40%   { background-image: url('assets/imgevent-poster.png'); }
-  60%   { background-image: url('images/bg4.jpg'); }
-  80%   { background-image: url('images/bg5.jpg'); }
-  100%  { background-image: url('images/bg1.jpg'); }
-}
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@600;700&display=swap');
-
-.title-section {
-  background: rgba(0, 0, 0, 0.3); /* <- Hier kannst du den Alpha-Wert ändern (0.0 = komplett transparent, 1.0 = voll sichtbar) */
-  margin: 40px auto;
-  padding: 30px;
-  border-radius: 16px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
-  max-width: 800px;
-  text-align: center;
-}
-
-.title-section h1 {
-  font-family: 'Inter', sans-serif;
-  font-size: 34px;
-  font-weight: 700;
-  color: white;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
-  line-height: 1.4;
-}
-
-.title-section .leylix-name {
-  color: #A927EF;
-  font-weight: 700;
-}
-    
-    .drop-zone {
-  border: 2px dashed #ccc;
-  border-radius: 12px;
-  padding: 20px;
-  text-align: center;
-  cursor: pointer;
-  background-color: rgba(255,255,255,0.15);
-  transition: background-color 0.3s;
-  margin-bottom: 30px;
-}
-    .drop-zone:hover {
-  background-color: rgba(255,255,255,0.6);
-}
-.drop-zone.dragover {
-  background-color: rgba(255,255,255,0.3);
-  border-color: #A927EF;
-}
-
 
 
 
   </style>
 </head>
 <body>
-
-  <div class="background-slideshow"></div>
-   <section class="title-section">
-  <h1>Anmeldeformular für Events,<br>Locations & Equipmentanbieter auf <span class="leylix-name">Leylix</span></h1>
-</section>
-
+  <header class="event-header">
+  <img src="/assets/WebEventPoster.png" alt="Event Poster" />
+    
+</header>
   
+
+  <h2>Anmeldformular für Events & Anbieter</h2>
+
   <form id="eventForm" action="https://script.google.com/macros/s/AKfycbx7KzOM8zw13yKrwsjraHjhDS7S2_VVECB3xA50y37jNdbDwGNY8qiUjdtdFPMJpjbnLw/exec" method="post">
 
     <label>Was möchtest du eintragen?*</label>
@@ -480,7 +411,7 @@
 
 <div>
   <label>Eventbeschreibung*</label>
-  <textarea name="beschreibung" rows="4" required placeholder="Beschreibe deine Veranstaltung."></textarea>
+  <textarea name="beschreibung" rows="4" required></textarea>
 </div>
 
 <div>
@@ -488,22 +419,10 @@
   <input type="url" name="link" placeholder="Für weitere Informationen" />
 </div>
 
-    
-<label for="fileInput">Bild oder Video (optional)</label>
-
-<div id="dropZone" class="drop-zone" onclick="fileInput.click()">
-  <p>📂 Bild oder Video hierher ziehen oder klicken zum Auswählen</p>
-  <input type="file" id="fileInput" accept="image/*,video/*" hidden onchange="previewMedia()" />
-</div>
-
-<div id="mediaPreviewContainer" style="margin-top: 12px; position: relative;">
-  <img id="preview" style="max-width: 300px; display: none; cursor: pointer;" onclick="openModal('image')" />
-  <video id="previewVideo" controls style="max-width: 300px; display: none; cursor: pointer;" onclick="openModal('video')"></video>
-  <button id="removeMediaBtn" onclick="removeMedia()" style="display: none;
-    position: absolute; top: 0; right: 0; background: rgba(0,0,0,0.7);
-    color: white; border: none; padding: 4px 8px; cursor: pointer; border-radius: 6px;">❌</button>
-</div>
-
+<label>Bild oder Video (optional)</label>
+<input type="file" accept="image/*,video/*" id="fileInput" onchange="previewMedia()" />
+<img id="preview" style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal('image')" />
+<video id="previewVideo" controls style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal('video')"></video>
 
 <!-- Modal -->
 <div id="modal" class="modal">
@@ -629,34 +548,24 @@ if (file.size > MAX_FILE_SIZE) {
     updateFormSections();
 
     // Bild-Preview und Modal-Bild zurücksetzen
-document.getElementById("preview").outerHTML =
-  '<img id="preview" style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal(\'image\')" />';
-document.getElementById("previewVideo").outerHTML =
-  '<video id="previewVideo" controls style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal(\'video\')"></video>';
-
-// 🔁 Neue Referenzen holen
-const preview = document.getElementById("preview");
+    const preview = document.getElementById("preview");
 const previewVideo = document.getElementById("previewVideo");
 const modalImage = document.getElementById("modalImage");
 const modalVideo = document.getElementById("modalVideo");
 const modal = document.getElementById("modal");
 
-// ✅ Preview zurücksetzen
-if (preview) {
-  preview.src = "";
-  preview.style.display = "none";
-}
-if (previewVideo) {
-  previewVideo.src = "";
-  previewVideo.style.display = "none";
-}
+// Preview zurücksetzen
+document.getElementById("preview").outerHTML =
+  '<img id="preview" style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal(\'image\')" />';
+document.getElementById("previewVideo").outerHTML =
+  '<video id="previewVideo" controls style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal(\'video\')"></video>';
 
-// ✅ Modal schließen
+// Modal zurücksetzen
 if (modalImage) modalImage.src = "";
 if (modalVideo) modalVideo.src = "";
 if (modal) modal.style.display = "none";
 
-// ✅ FileInput leeren
+// FileInput leeren
 if (fileInput) fileInput.value = "";
 
   })
@@ -736,73 +645,12 @@ function closeModal() {
   requestAnimationFrame(raf);
 </script>
 
-<script>
-  const dropZone = document.getElementById('dropZone');
-  const fileInput = document.getElementById('fileInput');
-  const preview = document.getElementById("preview");
-  const previewVideo = document.getElementById("previewVideo");
-  const removeBtn = document.getElementById("removeMediaBtn");
-
-  dropZone.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    dropZone.classList.add('dragover');
-  });
-
-  dropZone.addEventListener('dragleave', () => {
-    dropZone.classList.remove('dragover');
-  });
-
-  dropZone.addEventListener('drop', (e) => {
-    e.preventDefault();
-    dropZone.classList.remove('dragover');
-    const file = e.dataTransfer.files[0];
-    if (file) {
-      fileInput.files = e.dataTransfer.files;
-      previewMedia();
-    }
-  });
-
-  function previewMedia() {
-    const file = fileInput.files[0];
-    if (!file) return;
-
-    removeMedia(); // vorherige löschen
-
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const url = e.target.result;
-      if (file.type.startsWith("image/")) {
-        preview.src = url;
-        preview.style.display = "block";
-        previewVideo.style.display = "none";
-      } else if (file.type.startsWith("video/")) {
-        previewVideo.src = url;
-        previewVideo.style.display = "block";
-        preview.style.display = "none";
-      }
-      removeBtn.style.display = "block";
-    };
-    reader.readAsDataURL(file);
-  }
-
-  function removeMedia() {
-    preview.src = "";
-    previewVideo.src = "";
-    preview.style.display = "none";
-    previewVideo.style.display = "none";
-    removeBtn.style.display = "none";
-    fileInput.value = ""; // wichtig!
-  }
-
-</script>
 
 
 
 
 </body>
 </html>
-
-
 
 
 
