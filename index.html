@@ -361,6 +361,26 @@
   color: #A927EF;
   font-weight: 700;
 }
+    .drop-zone {
+  border: 2px dashed #ccc;
+  border-radius: 12px;
+  padding: 30px;
+  text-align: center;
+  background-color: rgba(255,255,255,0.4);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 30px;
+}
+
+.drop-zone:hover {
+  background-color: rgba(255,255,255,0.6);
+}
+
+.drop-zone.dragover {
+  background-color: #e0e0ff;
+  border-color: #A927EF;
+}
+
 
 
   </style>
@@ -466,6 +486,11 @@
 <div>
   <label>Externer Link (optional)</label>
   <input type="url" name="link" placeholder="Für weitere Informationen" />
+</div>
+
+    <div id="dropZone" class="drop-zone">
+  <p>📂 Bild oder Video hierher ziehen oder klicken zum Auswählen</p>
+  <input type="file" id="fileInput" accept="image/*,video/*" hidden />
 </div>
 
 <label>Bild oder Video (optional)</label>
@@ -710,6 +735,7 @@ function closeModal() {
 
 </body>
 </html>
+
 
 
 
