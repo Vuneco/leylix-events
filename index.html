@@ -785,14 +785,23 @@ function closeModal() {
     reader.readAsDataURL(file);
   }
 
-  function removeMedia() {
-    preview.src = "";
-    previewVideo.src = "";
-    preview.style.display = "none";
-    previewVideo.style.display = "none";
-    removeBtn.style.display = "none";
-    fileInput.value = ""; // wichtig!
-  }
+  function removePreview() {
+  const preview = document.getElementById("preview");
+  const video = document.getElementById("previewVideo");
+  const deleteBtn = document.querySelector(".delete-preview");
+  const fileInput = document.getElementById("fileInput");
+
+  preview.src = "";
+  preview.style.display = "none";
+
+  video.src = "";
+  video.style.display = "none";
+
+  if (deleteBtn) deleteBtn.style.display = "none";
+
+  if (fileInput) fileInput.value = "";
+}
+
 </script>
 
 
@@ -800,6 +809,7 @@ function closeModal() {
 
 </body>
 </html>
+
 
 
 
