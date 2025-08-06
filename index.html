@@ -336,29 +336,31 @@
   100%  { background-image: url('images/bg1.jpg'); }
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@600;700&display=swap');
+
 .title-section {
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(0, 0, 0, 0.3); /* <- Hier kannst du den Alpha-Wert ändern (0.0 = komplett transparent, 1.0 = voll sichtbar) */
   margin: 40px auto;
   padding: 30px;
   border-radius: 16px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
   max-width: 800px;
   text-align: center;
 }
 
 .title-section h1 {
-  font-family: 'Segoe UI', 'Poppins', sans-serif;
-  font-size: 32px;
+  font-family: 'Inter', sans-serif;
+  font-size: 34px;
   font-weight: 700;
-  color: #222;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+  color: white;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  line-height: 1.4;
 }
 
 .title-section .leylix-name {
   color: #A927EF;
-  font-weight: bold;
+  font-weight: 700;
 }
-
 
 
   </style>
@@ -367,7 +369,7 @@
 
   <div class="background-slideshow"></div>
    <section class="title-section">
-  <h1>Anmeldeformular für Events,<br>Locations- & Equipmentanbieter auf <span class="leylix-name">Leylix</span></h1>
+  <h1>Anmeldeformular für Events,<br>Locations & Equipmentanbieter auf <span class="leylix-name">Leylix</span></h1>
 </section>
 
   
@@ -708,6 +710,7 @@ function closeModal() {
 
 </body>
 </html>
+
 
 
 
