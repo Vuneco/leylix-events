@@ -361,25 +361,25 @@
   color: #A927EF;
   font-weight: 700;
 }
+    
     .drop-zone {
   border: 2px dashed #ccc;
   border-radius: 12px;
-  padding: 30px;
+  padding: 20px;
   text-align: center;
-  background-color: rgba(255,255,255,0.4);
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  background-color: rgba(255,255,255,0.15);
+  transition: background-color 0.3s;
   margin-bottom: 30px;
 }
-
-.drop-zone:hover {
+    .drop-zone:hover {
   background-color: rgba(255,255,255,0.6);
 }
-
 .drop-zone.dragover {
-  background-color: #e0e0ff;
+  background-color: rgba(255,255,255,0.3);
   border-color: #A927EF;
 }
+
 
 
 
@@ -491,13 +491,18 @@
     
 <label for="fileInput">Bild oder Video (optional)</label>
 
-<div id="dropZone" class="drop-zone" onclick="document.getElementById('fileInput').click();">
-  <p>📂 Datei hierher ziehen oder klicken zum Auswählen</p>
-  <input type="file" accept="image/*,video/*" id="fileInput" hidden onchange="previewMedia()" />
+<div id="dropZone" class="drop-zone" onclick="fileInput.click()">
+  <p>📂 Bild oder Video hierher ziehen oder klicken zum Auswählen</p>
+  <input type="file" id="fileInput" accept="image/*,video/*" hidden onchange="previewMedia()" />
 </div>
 
-<img id="preview" style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal('image')" />
-<video id="previewVideo" controls style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal('video')"></video>
+<div id="mediaPreviewContainer" style="margin-top: 12px; position: relative;">
+  <img id="preview" style="max-width: 300px; display: none; cursor: pointer;" onclick="openModal('image')" />
+  <video id="previewVideo" controls style="max-width: 300px; display: none; cursor: pointer;" onclick="openModal('video')"></video>
+  <button id="removeMediaBtn" onclick="removeMedia()" style="display: none;
+    position: absolute; top: 0; right: 0; background: rgba(0,0,0,0.7);
+    color: white; border: none; padding: 4px 8px; cursor: pointer; border-radius: 6px;">❌</button>
+</div>
 
 
 <!-- Modal -->
@@ -732,9 +737,11 @@ function closeModal() {
 </script>
 
 <script>
-  // Drag & Drop für Datei
   const dropZone = document.getElementById('dropZone');
   const fileInput = document.getElementById('fileInput');
+  const preview = document.getElementById("preview");
+  const previewVideo = document.getElementById("previewVideo");
+  const removeBtn = document.getElementById("removeMediaBtn");
 
   dropZone.addEventListener('dragover', (e) => {
     e.preventDefault();
@@ -748,13 +755,44 @@ function closeModal() {
   dropZone.addEventListener('drop', (e) => {
     e.preventDefault();
     dropZone.classList.remove('dragover');
-
     const file = e.dataTransfer.files[0];
     if (file) {
       fileInput.files = e.dataTransfer.files;
-      previewMedia(); // nutzt deine bestehende Vorschau-Funktion
+      previewMedia();
     }
   });
+
+  function previewMedia() {
+    const file = fileInput.files[0];
+    if (!file) return;
+
+    removeMedia(); // vorherige löschen
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const url = e.target.result;
+      if (file.type.startsWith("image/")) {
+        preview.src = url;
+        preview.style.display = "block";
+        previewVideo.style.display = "none";
+      } else if (file.type.startsWith("video/")) {
+        previewVideo.src = url;
+        previewVideo.style.display = "block";
+        preview.style.display = "none";
+      }
+      removeBtn.style.display = "block";
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function removeMedia() {
+    preview.src = "";
+    previewVideo.src = "";
+    preview.style.display = "none";
+    previewVideo.style.display = "none";
+    removeBtn.style.display = "none";
+    fileInput.value = ""; // wichtig!
+  }
 </script>
 
 
@@ -762,6 +800,7 @@ function closeModal() {
 
 </body>
 </html>
+
 
 
 
