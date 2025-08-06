@@ -731,12 +731,38 @@ function closeModal() {
   requestAnimationFrame(raf);
 </script>
 
+<script>
+  // Drag & Drop für Datei
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('fileInput');
+
+  dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.classList.add('dragover');
+  });
+
+  dropZone.addEventListener('dragleave', () => {
+    dropZone.classList.remove('dragover');
+  });
+
+  dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      fileInput.files = e.dataTransfer.files;
+      previewMedia(); // nutzt deine bestehende Vorschau-Funktion
+    }
+  });
+</script>
 
 
 
 
 </body>
 </html>
+
 
 
 
