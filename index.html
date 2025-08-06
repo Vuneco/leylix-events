@@ -449,11 +449,17 @@
 
   <script>
     function updateFormSections() {
-      const type = document.getElementById("formType").value;
-      document.getElementById("eventSection").classList.toggle("hidden", type !== "event");
-      document.getElementById("djSection").classList.toggle("hidden", type !== "dj");
-      document.getElementById("equipmentSection").classList.toggle("hidden", type !== "equipment");
-    }
+  const type = document.getElementById("formType").value;
+
+  const eventSection = document.getElementById("eventSection");
+  if (eventSection) eventSection.classList.toggle("hidden", type !== "event");
+
+  const djSection = document.getElementById("djSection");
+  if (djSection) djSection.classList.toggle("hidden", type !== "dj");
+
+  const equipmentSection = document.getElementById("equipmentSection");
+  if (equipmentSection) equipmentSection.classList.toggle("hidden", type !== "equipment");
+}
 
     async function uploadFile(file) {
       if (!file) {
@@ -645,6 +651,7 @@ function closeModal() {
 
 </body>
 </html>
+
 
 
 
