@@ -548,24 +548,34 @@ if (file.size > MAX_FILE_SIZE) {
     updateFormSections();
 
     // Bild-Preview und Modal-Bild zurücksetzen
-    const preview = document.getElementById("preview");
-const previewVideo = document.getElementById("previewVideo");
-const modalImage = document.getElementById("modalImage");
-const modalVideo = document.getElementById("modalVideo");
-const modal = document.getElementById("modal");
-
-// Preview zurücksetzen
 document.getElementById("preview").outerHTML =
   '<img id="preview" style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal(\'image\')" />';
 document.getElementById("previewVideo").outerHTML =
   '<video id="previewVideo" controls style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal(\'video\')"></video>';
 
-// Modal zurücksetzen
+// 🔁 Neue Referenzen holen
+const preview = document.getElementById("preview");
+const previewVideo = document.getElementById("previewVideo");
+const modalImage = document.getElementById("modalImage");
+const modalVideo = document.getElementById("modalVideo");
+const modal = document.getElementById("modal");
+
+// ✅ Preview zurücksetzen
+if (preview) {
+  preview.src = "";
+  preview.style.display = "none";
+}
+if (previewVideo) {
+  previewVideo.src = "";
+  previewVideo.style.display = "none";
+}
+
+// ✅ Modal schließen
 if (modalImage) modalImage.src = "";
 if (modalVideo) modalVideo.src = "";
 if (modal) modal.style.display = "none";
 
-// FileInput leeren
+// ✅ FileInput leeren
 if (fileInput) fileInput.value = "";
 
   })
@@ -651,6 +661,7 @@ function closeModal() {
 
 </body>
 </html>
+
 
 
 
