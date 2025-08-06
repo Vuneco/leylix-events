@@ -549,14 +549,10 @@ const modalVideo = document.getElementById("modalVideo");
 const modal = document.getElementById("modal");
 
 // Preview zurücksetzen
-if (preview) {
-  preview.src = "";
-  preview.style.display = "none";
-}
-if (previewVideo) {
-  previewVideo.src = "";
-  previewVideo.style.display = "none";
-}
+document.getElementById("preview").outerHTML =
+  '<img id="preview" style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal(\'image\')" />';
+document.getElementById("previewVideo").outerHTML =
+  '<video id="previewVideo" controls style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal(\'video\')"></video>';
 
 // Modal zurücksetzen
 if (modalImage) modalImage.src = "";
@@ -649,6 +645,7 @@ function closeModal() {
 
 </body>
 </html>
+
 
 
 
