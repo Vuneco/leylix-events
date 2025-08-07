@@ -421,10 +421,17 @@
 
 
 <div style="display: flex; align-items: center; gap: 10px;">
-  <label for="fileInput">Bild oder Video (optional)</label>
-  <input type="file" accept="image/*,video/*" id="fileInput" onchange="previewMedia()" />
-  <button id="deletePreview" type="button" onclick="deletePreview()" style="display: none; font-size: 18px; background: transparent; border: none; cursor: pointer;">❌</button>
-</div>
+    <label for="fileInput">Bild oder Video (optional)</label>
+    <input type="file" accept="image/*,video/*" id="fileInput" onchange="previewMedia()" />
+    <button id="deletePreview" type="button" onclick="deletePreview()">❌</button>
+  </div>
+
+  
+  <!-- Modal für Großansicht -->
+  <div id="modal" onclick="closeModal()" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.8); justify-content:center; align-items:center; z-index:1000;">
+    <img id="modalImage" style="max-width:90%; max-height:90%; display:none;" />
+    <video id="modalVideo" controls style="max-width:90%; max-height:90%; display:none;"></video>
+  </div>
 
 <div id="previewContainer">
   <img id="preview" style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal('image')" />
@@ -581,83 +588,80 @@ if (fileInput) fileInput.value = "";
 });
 
   </script>
- <script>
-  function previewMedia() {
-    const fileInput = document.getElementById("fileInput");
-    const file = fileInput.files[0];
-    const preview = document.getElementById("preview");
-    const previewVideo = document.getElementById("previewVideo");
-    const deleteBtn = document.getElementById("deletePreview");
+  <script>
+    function previewMedia() {
+      const fileInput = document.getElementById("fileInput");
+      const file = fileInput.files[0];
+      const preview = document.getElementById("preview");
+      const previewVideo = document.getElementById("previewVideo");
+      const deleteBtn = document.getElementById("deletePreview");
 
-    if (!file) return;
+      if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const result = e.target.result;
+      const isImage = file.type.startsWith("image/");
+      const isVideo = file.type.startsWith("video/");
 
-      if (file.type.startsWith("image/")) {
-        preview.src = result;
-        preview.style.display = "block";
-        previewVideo.style.display = "none";
-      } else if (file.type.startsWith("video/")) {
-        previewVideo.src = result;
+      if (isImage) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          preview.src = e.target.result;
+          preview.style.display = "block";
+          previewVideo.style.display = "none";
+          deleteBtn.style.display = "inline-block";
+        };
+        reader.readAsDataURL(file);
+      } else if (isVideo) {
+        const url = URL.createObjectURL(file);
+        previewVideo.src = url;
         previewVideo.style.display = "block";
         preview.style.display = "none";
+        deleteBtn.style.display = "inline-block";
       }
+    }
 
-      deleteBtn.style.display = "inline-block";
-    };
-    reader.readAsDataURL(file);
-  }
+    function deletePreview() {
+      const fileInput = document.getElementById("fileInput");
+      const preview = document.getElementById("preview");
+      const previewVideo = document.getElementById("previewVideo");
+      const deleteBtn = document.getElementById("deletePreview");
 
-  function deletePreview() {
-    const fileInput = document.getElementById("fileInput");
-    const preview = document.getElementById("preview");
-    const previewVideo = document.getElementById("previewVideo");
-    const deleteBtn = document.getElementById("deletePreview");
+      preview.src = "";
+      previewVideo.src = "";
+      preview.style.display = "none";
+      previewVideo.style.display = "none";
+      fileInput.value = "";
+      deleteBtn.style.display = "none";
+    }
 
-    // Reset preview
-    preview.src = "";
-    previewVideo.src = "";
+    function openModal(type) {
+      const modal = document.getElementById("modal");
+      const modalImage = document.getElementById("modalImage");
+      const modalVideo = document.getElementById("modalVideo");
+      const preview = document.getElementById("preview");
+      const previewVideo = document.getElementById("previewVideo");
 
-    preview.style.display = "none";
-    previewVideo.style.display = "none";
+      modal.style.display = "flex";
+      if (type === "image") {
+        modalImage.src = preview.src;
+        modalImage.style.display = "block";
+        modalVideo.style.display = "none";
+      } else {
+        modalVideo.src = previewVideo.src;
+        modalVideo.style.display = "block";
+        modalImage.style.display = "none";
+      }
+    }
 
-    fileInput.value = ""; // Wichtig: Löscht die ausgewählte Datei
+    function closeModal() {
+      const modal = document.getElementById("modal");
+      const modalImage = document.getElementById("modalImage");
+      const modalVideo = document.getElementById("modalVideo");
 
-    deleteBtn.style.display = "none"; // X ausblenden
-  }
-
-function openModal(type) {
-  const modal = document.getElementById("modal");
-  const modalImage = document.getElementById("modalImage");
-  const modalVideo = document.getElementById("modalVideo");
-  const preview = document.getElementById("preview");
-  const previewVideo = document.getElementById("previewVideo");
-
-  modal.style.display = "flex";
-  if (type === "image") {
-    modalImage.src = preview.src;
-    modalImage.style.display = "block";
-    modalVideo.style.display = "none";
-  } else {
-    modalVideo.src = previewVideo.src;
-    modalVideo.style.display = "block";
-    modalImage.style.display = "none";
-  }
-}
-
-function closeModal() {
-  const modal = document.getElementById("modal");
-  const modalImage = document.getElementById("modalImage");
-  const modalVideo = document.getElementById("modalVideo");
-
-  modal.style.display = "none";
-  modalImage.src = "";
-  modalVideo.src = "";
-}
-</script>
-
+      modal.style.display = "none";
+      modalImage.src = "";
+      modalVideo.src = "";
+    }
+  </script>
 
 <script src="https://unpkg.com/@studio-freight/lenis@1.0.18/bundled/lenis.min.js"></script>
 <script>
@@ -682,6 +686,7 @@ function closeModal() {
 
 </body>
 </html>
+
 
 
 
