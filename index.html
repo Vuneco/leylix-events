@@ -421,8 +421,12 @@
 
 <label>Bild oder Video (optional)</label>
 <input type="file" accept="image/*,video/*" id="fileInput" onchange="previewMedia()" />
-<img id="preview" style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal('image')" />
-<video id="previewVideo" controls style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal('video')"></video>
+<div id="previewContainer" style="position: relative; display: inline-block;">
+  <img id="preview" style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal('image')" />
+  <video id="previewVideo" controls style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal('video')"></video>
+  <span id="deletePreview" onclick="deletePreview()" style="position: absolute; top: -10px; right: -10px; background: white; color: black; font-size: 22px; font-weight: bold; border-radius: 50%; padding: 2px 10px; cursor: pointer; display: none;">×</span>
+</div>
+
 
 <!-- Modal -->
 <div id="modal" class="modal">
@@ -579,6 +583,7 @@ function previewMedia() {
   const file = fileInput.files[0];
   const preview = document.getElementById("preview");
   const previewVideo = document.getElementById("previewVideo");
+  const deleteBtn = document.getElementById("deletePreview");
 
   if (!file) return;
 
@@ -588,6 +593,7 @@ function previewMedia() {
       preview.src = e.target.result;
       preview.style.display = "block";
       previewVideo.style.display = "none";
+      deleteBtn.style.display = "block";
     };
     reader.readAsDataURL(file);
   } else if (file.type.startsWith("video/")) {
@@ -595,7 +601,22 @@ function previewMedia() {
     previewVideo.src = url;
     previewVideo.style.display = "block";
     preview.style.display = "none";
+    deleteBtn.style.display = "block";
   }
+}
+
+function deletePreview() {
+  const preview = document.getElementById("preview");
+  const previewVideo = document.getElementById("previewVideo");
+  const deleteBtn = document.getElementById("deletePreview");
+  const fileInput = document.getElementById("fileInput");
+
+  preview.src = "";
+  preview.style.display = "none";
+  previewVideo.src = "";
+  previewVideo.style.display = "none";
+  deleteBtn.style.display = "none";
+  fileInput.value = "";
 }
 
 function openModal(type) {
@@ -628,6 +649,7 @@ function closeModal() {
 }
 </script>
 
+
 <script src="https://unpkg.com/@studio-freight/lenis@1.0.18/bundled/lenis.min.js"></script>
 <script>
   //Ab hier ist wegen smooze scrolling! Es dürfen aber keine anderen codes für diese geste sein. Wenn doch funktioniert es nicht richtig!!!
@@ -651,6 +673,7 @@ function closeModal() {
 
 </body>
 </html>
+
 
 
 
