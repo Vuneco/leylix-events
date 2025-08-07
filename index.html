@@ -422,12 +422,26 @@
 <label>Bild oder Video (optional)</label>
 <input type="file" accept="image/*,video/*" id="fileInput" onchange="previewMedia()" />
 
-<div id="previewContainer" style="display: flex; align-items: center; gap: 12px; margin-top: 10px;">
+<div id="previewContainer" style="position: relative; display: inline-block; margin-top: 10px;">
   <img id="preview" style="max-width: 300px; display: none; cursor: pointer;" onclick="openModal('image')" />
   <video id="previewVideo" controls style="max-width: 300px; display: none; cursor: pointer;" onclick="openModal('video')"></video>
-  <button id="removeMediaBtn" onclick="removeMedia()" style="display: none; background: none; border: none; font-size: 22px; cursor: pointer; color: red;">
-    ❌
-  </button>
+
+  <button id="removeMediaBtn" onclick="removeMedia()" style="
+    display: none;
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    z-index: 10;
+  ">×</button>
 </div>
 
 
@@ -678,6 +692,7 @@ function closeModal() {
 
 </body>
 </html>
+
 
 
 
