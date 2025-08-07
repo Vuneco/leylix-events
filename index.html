@@ -608,19 +608,21 @@ function previewMedia() {
 }
 
 function deletePreview() {
+  const preview = document.getElementById("preview");
+  const previewVideo = document.getElementById("previewVideo");
   const fileInput = document.getElementById("fileInput");
   const deleteBtn = document.getElementById("deletePreview");
-  const previewContainer = document.querySelector(".preview-container"); // Angenommen, du hast einen Container
-  
-  // Lösche alle Vorschauen im Container
-  if (previewContainer) {
-    while (previewContainer.firstChild) {
-      previewContainer.removeChild(previewContainer.firstChild);
-    }
-  }
 
-  // Setze den Dateieingabefeld zurück
+  // Die src-Attribute leeren und die Elemente ausblenden
+  preview.src = "";
+  preview.style.display = "none";
+  previewVideo.src = "";
+  previewVideo.style.display = "none";
+  
+  // Das Dateieingabefeld zurücksetzen
   fileInput.value = "";
+  
+  // Den Lösch-Button ausblenden
   deleteBtn.style.display = "none";
 }
 function openModal(type) {
