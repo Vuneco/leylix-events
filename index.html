@@ -420,17 +420,15 @@
 </div>
 
 
-<div style="display: flex; align-items: center; gap: 10px; position: relative;">
+<div style="display: flex; align-items: center; gap: 10px;">
   <label for="fileInput">Bild oder Video (optional)</label>
   <input type="file" accept="image/*,video/*" id="fileInput" onchange="previewMedia()" />
-  <button id="deletePreview" type="button" onclick="deletePreview()" 
-    style="display: none; font-size: 20px; background: transparent; border: none; cursor: pointer;">
-    ❌
-  </button>
+  <button id="deletePreview" onclick="deletePreview()" type="button" style="display: none; font-size: 18px; background: transparent; border: none; cursor: pointer;">❌</button>
 </div>
 
 <img id="preview" style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal('image')" />
 <video id="previewVideo" controls style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal('video')"></video>
+
 
 
     
@@ -584,56 +582,44 @@ if (fileInput) fileInput.value = "";
 
   </script>
  <script>
-function previewMedia() {
-  const fileInput = document.getElementById("fileInput");
-  const file = fileInput.files[0];
-  const preview = document.getElementById("preview");
-  const previewVideo = document.getElementById("previewVideo");
-  const deleteBtn = document.getElementById("deletePreview");
+  function previewMedia() {
+    const fileInput = document.getElementById("fileInput");
+    const file = fileInput.files[0];
+    const preview = document.getElementById("preview");
+    const previewVideo = document.getElementById("previewVideo");
+    const deleteBtn = document.getElementById("deletePreview");
 
-  if (!file) return;
+    if (!file) return;
 
-  const reader = new FileReader();
-  reader.onload = function (e) {
-    const url = e.target.result;
-
-    if (file.type.startsWith("image/")) {
-      preview.src = url;
-      preview.style.display = "block";
-      previewVideo.style.display = "none";
-    } else if (file.type.startsWith("video/")) {
-      previewVideo.src = url;
-      previewVideo.style.display = "block";
-      preview.style.display = "none";
-    }
-
-    deleteBtn.style.display = "inline-block";
-  };
-
-  if (file.type.startsWith("image/")) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      if (file.type.startsWith("image/")) {
+        preview.src = e.target.result;
+        preview.style.display = "block";
+        previewVideo.style.display = "none";
+      } else if (file.type.startsWith("video/")) {
+        previewVideo.src = e.target.result;
+        previewVideo.style.display = "block";
+        preview.style.display = "none";
+      }
+      deleteBtn.style.display = "inline-block";
+    };
     reader.readAsDataURL(file);
-  } else if (file.type.startsWith("video/")) {
-    const videoUrl = URL.createObjectURL(file);
-    previewVideo.src = videoUrl;
-    previewVideo.style.display = "block";
-    preview.style.display = "none";
-    deleteBtn.style.display = "inline-block";
   }
-}
 
-function deletePreview() {
-  const preview = document.getElementById("preview");
-  const previewVideo = document.getElementById("previewVideo");
-  const fileInput = document.getElementById("fileInput");
-  const deleteBtn = document.getElementById("deletePreview");
+  function deletePreview() {
+    const preview = document.getElementById("preview");
+    const previewVideo = document.getElementById("previewVideo");
+    const fileInput = document.getElementById("fileInput");
+    const deleteBtn = document.getElementById("deletePreview");
 
-  preview.src = "";
-  previewVideo.src = "";
-  preview.style.display = "none";
-  previewVideo.style.display = "none";
-  fileInput.value = "";
-  deleteBtn.style.display = "none";
-}
+    preview.src = "";
+    previewVideo.src = "";
+    preview.style.display = "none";
+    previewVideo.style.display = "none";
+    fileInput.value = ""; // ganz wichtig!
+    deleteBtn.style.display = "none";
+  }
 
 function openModal(type) {
   const modal = document.getElementById("modal");
@@ -689,6 +675,7 @@ function closeModal() {
 
 </body>
 </html>
+
 
 
 
