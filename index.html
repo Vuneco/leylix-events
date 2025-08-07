@@ -420,14 +420,18 @@
 </div>
 
 
-<div style="display: flex; align-items: center; gap: 10px;">
+<div style="display: flex; align-items: center; gap: 10px; position: relative;">
   <label for="fileInput">Bild oder Video (optional)</label>
   <input type="file" accept="image/*,video/*" id="fileInput" onchange="previewMedia()" />
-  <button id="deletePreview" type="button" onclick="deletePreview()" style="display: none; font-size: 18px; background: transparent; border: none; cursor: pointer;">❌</button>
+  <button id="deletePreview" type="button" onclick="deletePreview()" 
+    style="display: none; font-size: 20px; background: transparent; border: none; cursor: pointer;">
+    ❌
+  </button>
 </div>
 
 <img id="preview" style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal('image')" />
 <video id="previewVideo" controls style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal('video')"></video>
+
 
     
 <!-- Modal -->
@@ -589,21 +593,31 @@ function previewMedia() {
 
   if (!file) return;
 
-  deleteBtn.style.display = "inline"; // ❌ anzeigen
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    const url = e.target.result;
 
-  if (file.type.startsWith("image/")) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      preview.src = e.target.result;
+    if (file.type.startsWith("image/")) {
+      preview.src = url;
       preview.style.display = "block";
       previewVideo.style.display = "none";
-    };
+    } else if (file.type.startsWith("video/")) {
+      previewVideo.src = url;
+      previewVideo.style.display = "block";
+      preview.style.display = "none";
+    }
+
+    deleteBtn.style.display = "inline-block";
+  };
+
+  if (file.type.startsWith("image/")) {
     reader.readAsDataURL(file);
   } else if (file.type.startsWith("video/")) {
-    const url = URL.createObjectURL(file);
-    previewVideo.src = url;
+    const videoUrl = URL.createObjectURL(file);
+    previewVideo.src = videoUrl;
     previewVideo.style.display = "block";
     preview.style.display = "none";
+    deleteBtn.style.display = "inline-block";
   }
 }
 
@@ -613,18 +627,14 @@ function deletePreview() {
   const fileInput = document.getElementById("fileInput");
   const deleteBtn = document.getElementById("deletePreview");
 
-  // Die src-Attribute leeren und die Elemente ausblenden
   preview.src = "";
-  preview.style.display = "none";
   previewVideo.src = "";
+  preview.style.display = "none";
   previewVideo.style.display = "none";
-  
-  // Das Dateieingabefeld zurücksetzen
   fileInput.value = "";
-  
-  // Den Lösch-Button ausblenden
   deleteBtn.style.display = "none";
 }
+
 function openModal(type) {
   const modal = document.getElementById("modal");
   const modalImage = document.getElementById("modalImage");
@@ -679,6 +689,7 @@ function closeModal() {
 
 </body>
 </html>
+
 
 
 
