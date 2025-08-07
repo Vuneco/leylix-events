@@ -431,8 +431,6 @@
 </div>
 
 
-
-
 <!-- Modal -->
 <div id="modal" class="modal">
   <div class="modal-content">
@@ -617,12 +615,14 @@ function deletePreview() {
   const fileInput = document.getElementById("fileInput");
 
   preview.src = "";
-  preview.style.display = "none";
   previewVideo.src = "";
+  preview.style.display = "none";
   previewVideo.style.display = "none";
-  deleteBtn.style.display = "none";
+  removeBtn.style.display = "none";
   fileInput.value = "";
 }
+   
+
 
 function openModal(type) {
   const modal = document.getElementById("modal");
@@ -678,6 +678,7 @@ function closeModal() {
 
 </body>
 </html>
+
 
 
 
