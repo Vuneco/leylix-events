@@ -423,13 +423,13 @@
 <div style="display: flex; align-items: center; gap: 10px;">
   <label for="fileInput">Bild oder Video (optional)</label>
   <input type="file" accept="image/*,video/*" id="fileInput" onchange="previewMedia()" />
-  <button id="deletePreview" onclick="deletePreview()" type="button" style="display: none; font-size: 18px; background: transparent; border: none; cursor: pointer;">❌</button>
+  <button id="deletePreview" type="button" onclick="deletePreview()" style="display: none; font-size: 18px; background: transparent; border: none; cursor: pointer;">❌</button>
 </div>
 
-<img id="preview" style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal('image')" />
-<video id="previewVideo" controls style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal('video')"></video>
-
-
+<div id="previewContainer">
+  <img id="preview" style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal('image')" />
+  <video id="previewVideo" controls style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal('video')"></video>
+</div>
 
     
 <!-- Modal -->
@@ -593,32 +593,39 @@ if (fileInput) fileInput.value = "";
 
     const reader = new FileReader();
     reader.onload = function(e) {
+      const result = e.target.result;
+
       if (file.type.startsWith("image/")) {
-        preview.src = e.target.result;
+        preview.src = result;
         preview.style.display = "block";
         previewVideo.style.display = "none";
       } else if (file.type.startsWith("video/")) {
-        previewVideo.src = e.target.result;
+        previewVideo.src = result;
         previewVideo.style.display = "block";
         preview.style.display = "none";
       }
+
       deleteBtn.style.display = "inline-block";
     };
     reader.readAsDataURL(file);
   }
 
   function deletePreview() {
+    const fileInput = document.getElementById("fileInput");
     const preview = document.getElementById("preview");
     const previewVideo = document.getElementById("previewVideo");
-    const fileInput = document.getElementById("fileInput");
     const deleteBtn = document.getElementById("deletePreview");
 
+    // Reset preview
     preview.src = "";
     previewVideo.src = "";
+
     preview.style.display = "none";
     previewVideo.style.display = "none";
-    fileInput.value = ""; // ganz wichtig!
-    deleteBtn.style.display = "none";
+
+    fileInput.value = ""; // Wichtig: Löscht die ausgewählte Datei
+
+    deleteBtn.style.display = "none"; // X ausblenden
   }
 
 function openModal(type) {
@@ -675,6 +682,7 @@ function closeModal() {
 
 </body>
 </html>
+
 
 
 
