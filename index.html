@@ -648,14 +648,20 @@ if (fileInput) fileInput.value = "";
     }
 
     function closeModal() {
-      const modal = document.getElementById("modal");
-      const modalImage = document.getElementById("modalImage");
-      const modalVideo = document.getElementById("modalVideo");
+  const modal = document.getElementById("modal");
+  const modalImage = document.getElementById("modalImage");
+  const modalVideo = document.getElementById("modalVideo");
 
-      modal.style.display = "none";
-      modalImage.src = "";
-      modalVideo.src = "";
-    }
+  modal.style.display = "none";
+  modalImage.src = "";
+  modalVideo.src = "";
+
+  // ⬇️ Vorschau-Elemente im Formular auch verstecken
+  document.getElementById("preview").style.display = "none";
+  document.getElementById("previewVideo").style.display = "none";
+  document.getElementById("deletePreview").style.display = "none";
+}
+
   </script>
 
 <script src="https://unpkg.com/@studio-freight/lenis@1.0.18/bundled/lenis.min.js"></script>
@@ -681,6 +687,7 @@ if (fileInput) fileInput.value = "";
 
 </body>
 </html>
+
 
 
 
