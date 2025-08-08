@@ -444,10 +444,15 @@
   <video id="previewVideo" controls onclick="openModal('video')"></video>
 
   <!-- Modal für Großansicht -->
-  <div id="modal" onclick="closeModal()" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.8); justify-content:center; align-items:center; z-index:1000;">
-    <img id="modalImage" style="max-width:90%; max-height:90%; display:none;" />
-    <video id="modalVideo" controls style="max-width:90%; max-height:90%; display:none;"></video>
+  <!-- Modal -->
+<div id="modal" class="modal" style="display:none" onclick="closeModal()">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <span class="close" onclick="closeModal()">×</span>
+    <img id="modalImage" style="display:none; max-width:100%; max-height:80vh;" />
+    <video id="modalVideo" controls style="display:none; max-width:100%; max-height:80vh;"></video>
   </div>
+</div>
+
 
 
     <input type="hidden" name="imageUrl" id="uploadedImageUrl" />
@@ -622,18 +627,22 @@ if (fileInput) fileInput.value = "";
     }
 
     function deletePreview() {
-      const fileInput = document.getElementById("fileInput");
-      const preview = document.getElementById("preview");
-      const previewVideo = document.getElementById("previewVideo");
-      const deleteBtn = document.getElementById("deletePreview");
+  const fileInput = document.getElementById("fileInput");
+  const preview = document.getElementById("preview");
+  const previewVideo = document.getElementById("previewVideo");
+  const deleteBtn = document.getElementById("deletePreview");
 
-      preview.src = "";
-      previewVideo.src = "";
-      preview.style.display = "none";
-      previewVideo.style.display = "none";
-      fileInput.value = "";
-      deleteBtn.style.display = "none";
-    }
+  if (previewVideo.src && previewVideo.src.startsWith("blob:")) {
+    URL.revokeObjectURL(previewVideo.src);
+  }
+  preview.src = "";
+  previewVideo.src = "";
+  preview.style.display = "none";
+  previewVideo.style.display = "none";
+  fileInput.value = "";
+  deleteBtn.style.display = "none";
+}
+
 
     function openModal(type) {
       const modal = document.getElementById("modal");
@@ -655,14 +664,25 @@ if (fileInput) fileInput.value = "";
     }
 
     function closeModal() {
-      const modal = document.getElementById("modal");
-      const modalImage = document.getElementById("modalImage");
-      const modalVideo = document.getElementById("modalVideo");
+  const modal = document.getElementById("modal");
+  const modalImage = document.getElementById("modalImage");
+  const modalVideo = document.getElementById("modalVideo");
 
-      modal.style.display = "none";
-      modalImage.src = "";
-      modalVideo.src = "";
-    }
+  modal.style.display = "none";
+  modalImage.src = "";
+  modalVideo.pause?.();
+  modalVideo.currentTime = 0;
+  modalVideo.src = "";
+
+  // kleine Vorschau im Formular ebenfalls schließen
+  const preview = document.getElementById("preview");
+  const previewVideo = document.getElementById("previewVideo");
+  const delBtn = document.getElementById("deletePreview");
+  if (preview) preview.style.display = "none";
+  if (previewVideo) previewVideo.style.display = "none";
+  if (delBtn) delBtn.style.display = "none";
+}
+
 
   </script>
 
@@ -689,6 +709,7 @@ if (fileInput) fileInput.value = "";
 
 </body>
 </html>
+
 
 
 
