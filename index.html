@@ -310,6 +310,21 @@
   from { transform: scale(0.8); opacity: 0; }
   to   { transform: scale(1); opacity: 1; }
 }
+    #preview, #previewVideo {
+      max-width: 300px;
+      margin-top: 10px;
+      display: none;
+      cursor: pointer;
+    }
+    #deletePreview {
+      display: none;
+      font-size: 18px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      margin-left: 10px;
+      color: red;
+    }
 
     
 
@@ -418,32 +433,22 @@
   <label>Externer Link (optional)</label>
   <input type="url" name="link" placeholder="Für weitere Informationen" />
 </div>
-
-
+    
 <div style="display: flex; align-items: center; gap: 10px;">
     <label for="fileInput">Bild oder Video (optional)</label>
     <input type="file" accept="image/*,video/*" id="fileInput" onchange="previewMedia()" />
     <button id="deletePreview" type="button" onclick="deletePreview()">❌</button>
   </div>
-  
-  
 
-<div id="previewContainer">
-  <img id="preview" style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal('image')" />
-  <video id="previewVideo" controls style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal('video')"></video>
-</div>
-
-    <img id="preview" onclick="openModal('image')" />
+  <img id="preview" onclick="openModal('image')" />
   <video id="previewVideo" controls onclick="openModal('video')"></video>
-    
-<!-- Modal -->
-<div id="modal" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal()">×</span>
-    <img id="modalImage" />
-    <video id="modalVideo" controls></video>
+
+  <!-- Modal für Großansicht -->
+  <div id="modal" onclick="closeModal()" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.8); justify-content:center; align-items:center; z-index:1000;">
+    <img id="modalImage" style="max-width:90%; max-height:90%; display:none;" />
+    <video id="modalVideo" controls style="max-width:90%; max-height:90%; display:none;"></video>
   </div>
-</div>
+
 
     <input type="hidden" name="imageUrl" id="uploadedImageUrl" />
 
@@ -650,19 +655,14 @@ if (fileInput) fileInput.value = "";
     }
 
     function closeModal() {
-  const modal = document.getElementById("modal");
-  const modalImage = document.getElementById("modalImage");
-  const modalVideo = document.getElementById("modalVideo");
+      const modal = document.getElementById("modal");
+      const modalImage = document.getElementById("modalImage");
+      const modalVideo = document.getElementById("modalVideo");
 
-  modal.style.display = "none";
-  modalImage.src = "";
-  modalVideo.src = "";
-
-  // ⬇️ Vorschau-Elemente im Formular auch verstecken
-  document.getElementById("preview").style.display = "none";
-  document.getElementById("previewVideo").style.display = "none";
-  document.getElementById("deletePreview").style.display = "none";
-}
+      modal.style.display = "none";
+      modalImage.src = "";
+      modalVideo.src = "";
+    }
 
   </script>
 
@@ -689,6 +689,7 @@ if (fileInput) fileInput.value = "";
 
 </body>
 </html>
+
 
 
 
