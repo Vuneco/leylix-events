@@ -426,11 +426,7 @@
   <button id="deletePreview" type="button" onclick="deletePreview()" style="display: none; font-size: 18px; background: transparent; border: none; cursor: pointer;">❌</button>
 </div>
   
-  <!-- Modal für Großansicht -->
-  <div id="modal" onclick="closeModal()" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.8); justify-content:center; align-items:center; z-index:1000;">
-    <img id="modalImage" style="max-width:90%; max-height:90%; display:none;" />
-    <video id="modalVideo" controls style="max-width:90%; max-height:90%; display:none;"></video>
-  </div>
+  
 
 <div id="previewContainer">
   <img id="preview" style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal('image')" />
@@ -685,6 +681,7 @@ if (fileInput) fileInput.value = "";
 
 </body>
 </html>
+
 
 
 
