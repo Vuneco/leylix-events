@@ -421,10 +421,10 @@
 
 
 <div style="display: flex; align-items: center; gap: 10px;">
-  <label for="fileInput">Bild oder Video (optional)</label>
-  <input type="file" accept="image/*,video/*" id="fileInput" onchange="previewMedia()" />
-  <button id="deletePreview" type="button" onclick="deletePreview()" style="display: none; font-size: 18px; background: transparent; border: none; cursor: pointer;">❌</button>
-</div>
+    <label for="fileInput">Bild oder Video (optional)</label>
+    <input type="file" accept="image/*,video/*" id="fileInput" onchange="previewMedia()" />
+    <button id="deletePreview" type="button" onclick="deletePreview()">❌</button>
+  </div>
   
   
 
@@ -433,6 +433,8 @@
   <video id="previewVideo" controls style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal('video')"></video>
 </div>
 
+    <img id="preview" onclick="openModal('image')" />
+  <video id="previewVideo" controls onclick="openModal('video')"></video>
     
 <!-- Modal -->
 <div id="modal" class="modal">
@@ -687,6 +689,7 @@ if (fileInput) fileInput.value = "";
 
 </body>
 </html>
+
 
 
 
