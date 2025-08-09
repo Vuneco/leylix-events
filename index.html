@@ -627,21 +627,36 @@ if (fileInput) fileInput.value = "";
     }
 
     function deletePreview() {
-  const fileInput = document.getElementById("fileInput");
+  const oldInput = document.getElementById("fileInput");
   const preview = document.getElementById("preview");
   const previewVideo = document.getElementById("previewVideo");
   const deleteBtn = document.getElementById("deletePreview");
 
+  // ggf. Video-Blob freigeben
   if (previewVideo.src && previewVideo.src.startsWith("blob:")) {
     URL.revokeObjectURL(previewVideo.src);
   }
-  preview.src = "";
-  previewVideo.src = "";
+
+  // Previews verstecken + Quellen leeren
+  preview.removeAttribute("src");
   preview.style.display = "none";
+
+  if (!previewVideo.paused) previewVideo.pause();
+  previewVideo.removeAttribute("src");
+  previewVideo.load();
   previewVideo.style.display = "none";
-  fileInput.value = "";
+
+  // File-Input ersetzen -> Dateiname verschwindet sicher
+  const newInput = oldInput.cloneNode(true); // behält id + onchange
+  newInput.value = "";
+  oldInput.parentNode.replaceChild(newInput, oldInput);
+  // Fallback: Listener erneut binden (falls inline-onchange mal nicht zieht)
+  newInput.addEventListener("change", previewMedia);
+
+  // ❌-Button ausblenden
   deleteBtn.style.display = "none";
 }
+
 
 
     function openModal(type) {
@@ -709,6 +724,7 @@ if (fileInput) fileInput.value = "";
 
 </body>
 </html>
+
 
 
 
