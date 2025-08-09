@@ -622,46 +622,47 @@ if (fileInput) fileInput.value = "";
     }
     
 
-    function deletePreview() {
+ function deletePreview() {
+  // 1) Referenzen holen
   const oldInput = document.getElementById("fileInput");
-  const img = document.getElementById("preview");
+  const delBtn   = document.getElementById("deletePreview");
+
+  // 2) Video sicher stoppen + Blob freigeben
   const vid = document.getElementById("previewVideo");
-  const x   = document.getElementById("deletePreview");
-
-  // 1) Video sauber stoppen + Blob freigeben
-  try { vid.pause(); } catch(_) {}
-  if (vid.src && vid.src.startsWith("blob:")) {
-    try { URL.revokeObjectURL(vid.src); } catch(_) {}
+  try { vid.pause(); } catch (_) {}
+  if (vid && vid.src && vid.src.startsWith("blob:")) {
+    try { URL.revokeObjectURL(vid.src); } catch (_) {}
   }
-  vid.removeAttribute("src");
-  vid.load();                 // zwingt das Video zum echten Reset
-  vid.style.display = "none";
 
-  // 2) Bild leeren
-  img.removeAttribute("src");
-  img.style.display = "none";
+  // 3) Preview-Elemente *neu aufbauen* (echter Hard-Reset)
+  const img = document.getElementById("preview");
+  const imgParent = img.parentNode; // das ist dein #previewContainer
+  // Setze den Container-Inhalt auf die ursprüngliche Markup-Variante zurück:
+  imgParent.innerHTML = `
+    <img id="preview" style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal('image')" />
+    <video id="previewVideo" controls style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal('video')"></video>
+  `;
 
-  // 3) X ausblenden
-  x.style.display = "none";
-
-  // 4) File-Input wirklich in den Urzustand bringen (Dateiname weg)
-  //    -> Klonen + ersetzen (manche Browser behalten sonst die Anzeige)
+  // 4) File-Input wirklich ersetzen (damit Dateiname verschwindet)
   const newInput = oldInput.cloneNode(true); // behält id, accept, onchange
   newInput.value = "";
-  // zur Sicherheit: onchange binden, falls inline-Attribut mal nicht greift
+  // Falls das inline-onchange in manchen Browsern nicht greift:
   newInput.onchange = previewMedia;
   oldInput.parentNode.replaceChild(newInput, oldInput);
 
-  // 5) Falls Modal offen war, auch schließen/aufräumen
+  // 5) X ausblenden
+  if (delBtn) delBtn.style.display = "none";
+
+  // 6) Offenes Modal aufräumen (falls offen)
   const modal = document.getElementById("modal");
   const modalImage = document.getElementById("modalImage");
   const modalVideo = document.getElementById("modalVideo");
   if (modal) modal.style.display = "none";
   if (modalImage) modalImage.removeAttribute("src");
   if (modalVideo) {
-    try { modalVideo.pause(); } catch(_) {}
+    try { modalVideo.pause(); } catch (_) {}
     modalVideo.removeAttribute("src");
-    modalVideo.load();
+    modalVideo.load?.();
   }
 }
 
@@ -721,6 +722,7 @@ if (fileInput) fileInput.value = "";
 
 </body>
 </html>
+
 
 
 
