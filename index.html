@@ -597,64 +597,84 @@ if (fileInput) fileInput.value = "";
   </script>
   <script>
     function previewMedia() {
-      const fileInput = document.getElementById("fileInput");
-      const file = fileInput.files[0];
-      const preview = document.getElementById("preview");
-      const previewVideo = document.getElementById("previewVideo");
-      const deleteBtn = document.getElementById("deletePreview");
+  const fileInput = document.getElementById("fileInput");
+  const file = fileInput.files && fileInput.files[0];
+  const img = document.getElementById("preview");
+  const vid = document.getElementById("previewVideo");
+  const x   = document.getElementById("deletePreview");
 
-      if (!file) return;
+  if (!file) return;
 
-      const isImage = file.type.startsWith("image/");
-      const isVideo = file.type.startsWith("video/");
+  const isImage = file.type.startsWith("image/");
+  const isVideo = file.type.startsWith("video/");
 
-      if (isImage) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          preview.src = e.target.result;
-          preview.style.display = "block";
-          previewVideo.style.display = "none";
-          deleteBtn.style.display = "inline-block";
-        };
-        reader.readAsDataURL(file);
-      } else if (isVideo) {
-        const url = URL.createObjectURL(file);
-        previewVideo.src = url;
-        previewVideo.style.display = "block";
-        preview.style.display = "none";
-        deleteBtn.style.display = "inline-block";
-      }
-    }
+  if (isImage) {
+    // Video sauber räumen
+    if (!vid.paused) vid.pause();
+    if (vid.src && vid.src.startsWith("blob:")) URL.revokeObjectURL(vid.src);
+    vid.removeAttribute("src");
+    vid.load();
+    vid.style.display = "none";
 
-    function deletePreview() {
-  const oldInput = document.getElementById("fileInput");
-  const preview = document.getElementById("preview");
-  const previewVideo = document.getElementById("previewVideo");
-  const deleteBtn = document.getElementById("deletePreview");
+    // Bild setzen
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      img.src = e.target.result;
+      img.style.display = "block";
+      x.style.display = "inline-block";
+    };
+    reader.readAsDataURL(file);
+  } else if (isVideo) {
+    // Bild räumen
+    img.removeAttribute("src");
+    img.style.display = "none";
 
-  // ggf. Video-Blob freigeben
-  if (previewVideo.src && previewVideo.src.startsWith("blob:")) {
-    URL.revokeObjectURL(previewVideo.src);
+    // Altes Blob sauber freigeben
+    if (vid.src && vid.src.startsWith("blob:")) URL.revokeObjectURL(vid.src);
+
+    // Neues Video setzen
+    const url = URL.createObjectURL(file);
+    vid.src = url;
+    vid.style.display = "block";
+    x.style.display = "inline-block";
+  } else {
+    // Nicht unterstützter Typ -> komplett zurücksetzen
+    deletePreview();
   }
+}
 
-  // Previews verstecken + Quellen leeren
-  preview.removeAttribute("src");
-  preview.style.display = "none";
+function deletePreview() {
+  const oldInput = document.getElementById("fileInput");
+  const img = document.getElementById("preview");
+  const vid = document.getElementById("previewVideo");
+  const x   = document.getElementById("deletePreview");
 
-  if (!previewVideo.paused) previewVideo.pause();
-  previewVideo.removeAttribute("src");
-  previewVideo.load();
-  previewVideo.style.display = "none";
+  // Video sicher stoppen + Blob freigeben
+  try { if (!vid.paused) vid.pause(); } catch(_) {}
+  if (vid.src && vid.src.startsWith("blob:")) URL.revokeObjectURL(vid.src);
+  vid.removeAttribute("src");
+  vid.load();
+  vid.style.display = "none";
 
-  // File-Input ersetzen -> Dateiname verschwindet sicher
-  const newInput = oldInput.cloneNode(true); // behält id + onchange
-  newInput.value = "";
-  oldInput.parentNode.replaceChild(newInput, oldInput);
-  // Fallback: Listener erneut binden (falls inline-onchange mal nicht zieht)
-  newInput.addEventListener("change", previewMedia);
+  // Bild resetten
+  img.removeAttribute("src");
+  img.style.display = "none";
 
-  // ❌-Button ausblenden
-  deleteBtn.style.display = "none";
+  // X ausblenden
+  x.style.display = "none";
+
+  // File-Input wirklich auf Urzustand bringen (Dateiname weg):
+  // 1) normal leeren
+  try { oldInput.value = ""; } catch(_) {}
+
+  // 2) Falls Browser die UI nicht aktualisiert: hart ersetzen
+  if (oldInput.value) {
+    const newInput = oldInput.cloneNode(true);     // kopiert id, accept, onchange
+    newInput.value = "";
+    // zur Sicherheit Programmatic-Binding (falls inline-onchange mal spinnt)
+    newInput.onchange = previewMedia;
+    oldInput.parentNode.replaceChild(newInput, oldInput);
+  }
 }
 
 
@@ -724,6 +744,7 @@ if (fileInput) fileInput.value = "";
 
 </body>
 </html>
+
 
 
 
