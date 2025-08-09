@@ -597,126 +597,76 @@ if (fileInput) fileInput.value = "";
   </script>
   <script>
     function previewMedia() {
-  const fileInput = document.getElementById("fileInput");
-  const file = fileInput.files && fileInput.files[0];
-  const img = document.getElementById("preview");
-  const vid = document.getElementById("previewVideo");
-  const x   = document.getElementById("deletePreview");
+    const fileInput = document.getElementById("fileInput");
+    const file = fileInput.files[0];
+    const preview = document.getElementById("preview");
+    const previewVideo = document.getElementById("previewVideo");
+    const deleteBtn = document.getElementById("deletePreview");
 
-  if (!file) return;
+    if (!file) return;
 
-  const isImage = file.type.startsWith("image/");
-  const isVideo = file.type.startsWith("video/");
+    deleteBtn.style.display = "inline";
 
-  if (isImage) {
-    // Video sauber räumen
-    if (!vid.paused) vid.pause();
-    if (vid.src && vid.src.startsWith("blob:")) URL.revokeObjectURL(vid.src);
-    vid.removeAttribute("src");
-    vid.load();
-    vid.style.display = "none";
-
-    // Bild setzen
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      img.src = e.target.result;
-      img.style.display = "block";
-      x.style.display = "inline-block";
-    };
-    reader.readAsDataURL(file);
-  } else if (isVideo) {
-    // Bild räumen
-    img.removeAttribute("src");
-    img.style.display = "none";
-
-    // Altes Blob sauber freigeben
-    if (vid.src && vid.src.startsWith("blob:")) URL.revokeObjectURL(vid.src);
-
-    // Neues Video setzen
-    const url = URL.createObjectURL(file);
-    vid.src = url;
-    vid.style.display = "block";
-    x.style.display = "inline-block";
-  } else {
-    // Nicht unterstützter Typ -> komplett zurücksetzen
-    deletePreview();
-  }
-}
-
-function deletePreview() {
-  const oldInput = document.getElementById("fileInput");
-  const img = document.getElementById("preview");
-  const vid = document.getElementById("previewVideo");
-  const x   = document.getElementById("deletePreview");
-
-  // Video sicher stoppen + Blob freigeben
-  try { if (!vid.paused) vid.pause(); } catch(_) {}
-  if (vid.src && vid.src.startsWith("blob:")) URL.revokeObjectURL(vid.src);
-  vid.removeAttribute("src");
-  vid.load();
-  vid.style.display = "none";
-
-  // Bild resetten
-  img.removeAttribute("src");
-  img.style.display = "none";
-
-  // X ausblenden
-  x.style.display = "none";
-
-  // File-Input wirklich auf Urzustand bringen (Dateiname weg):
-  // 1) normal leeren
-  try { oldInput.value = ""; } catch(_) {}
-
-  // 2) Falls Browser die UI nicht aktualisiert: hart ersetzen
-  if (oldInput.value) {
-    const newInput = oldInput.cloneNode(true);     // kopiert id, accept, onchange
-    newInput.value = "";
-    // zur Sicherheit Programmatic-Binding (falls inline-onchange mal spinnt)
-    newInput.onchange = previewMedia;
-    oldInput.parentNode.replaceChild(newInput, oldInput);
-  }
-}
-
-
-
-    function openModal(type) {
-      const modal = document.getElementById("modal");
-      const modalImage = document.getElementById("modalImage");
-      const modalVideo = document.getElementById("modalVideo");
-      const preview = document.getElementById("preview");
-      const previewVideo = document.getElementById("previewVideo");
-
-      modal.style.display = "flex";
-      if (type === "image") {
-        modalImage.src = preview.src;
-        modalImage.style.display = "block";
-        modalVideo.style.display = "none";
-      } else {
-        modalVideo.src = previewVideo.src;
-        modalVideo.style.display = "block";
-        modalImage.style.display = "none";
-      }
+    if (file.type.startsWith("image/")) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        preview.src = e.target.result;
+        preview.style.display = "block";
+        previewVideo.style.display = "none";
+      };
+      reader.readAsDataURL(file);
+    } else if (file.type.startsWith("video/")) {
+      const url = URL.createObjectURL(file);
+      previewVideo.src = url;
+      previewVideo.style.display = "block";
+      preview.style.display = "none";
     }
+  }
 
-    function closeModal() {
-  const modal = document.getElementById("modal");
-  const modalImage = document.getElementById("modalImage");
-  const modalVideo = document.getElementById("modalVideo");
+  function deletePreview() {
+    const preview = document.getElementById("preview");
+    const previewVideo = document.getElementById("previewVideo");
+    const fileInput = document.getElementById("fileInput");
+    const deleteBtn = document.getElementById("deletePreview");
 
-  modal.style.display = "none";
-  modalImage.src = "";
-  modalVideo.pause?.();
-  modalVideo.currentTime = 0;
-  modalVideo.src = "";
+    preview.src = "";
+    preview.style.display = "none";
+    previewVideo.src = "";
+    previewVideo.style.display = "none";
+    
+    fileInput.value = "";
+    
+    deleteBtn.style.display = "none";
+  }
 
-  // kleine Vorschau im Formular ebenfalls schließen
-  const preview = document.getElementById("preview");
-  const previewVideo = document.getElementById("previewVideo");
-  const delBtn = document.getElementById("deletePreview");
-  if (preview) preview.style.display = "none";
-  if (previewVideo) previewVideo.style.display = "none";
-  if (delBtn) delBtn.style.display = "none";
-}
+  function openModal(type) {
+    const modal = document.getElementById("modal");
+    const modalImage = document.getElementById("modalImage");
+    const modalVideo = document.getElementById("modalVideo");
+    const preview = document.getElementById("preview");
+    const previewVideo = document.getElementById("previewVideo");
+
+    modal.style.display = "flex";
+    if (type === "image") {
+      modalImage.src = preview.src;
+      modalImage.style.display = "block";
+      modalVideo.style.display = "none";
+    } else {
+      modalVideo.src = previewVideo.src;
+      modalVideo.style.display = "block";
+      modalImage.style.display = "none";
+    }
+  }
+
+  function closeModal() {
+    const modal = document.getElementById("modal");
+    const modalImage = document.getElementById("modalImage");
+    const modalVideo = document.getElementById("modalVideo");
+
+    modal.style.display = "none";
+    modalImage.src = "";
+    modalVideo.src = "";
+  }
 
 
   </script>
@@ -744,6 +694,7 @@ function deletePreview() {
 
 </body>
 </html>
+
 
 
 
