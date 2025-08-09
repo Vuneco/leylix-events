@@ -623,18 +623,47 @@ if (fileInput) fileInput.value = "";
     
 
     function deletePreview() {
-      const fileInput = document.getElementById("fileInput");
-      const preview = document.getElementById("preview");
-      const previewVideo = document.getElementById("previewVideo");
-      const deleteBtn = document.getElementById("deletePreview");
+  const oldInput = document.getElementById("fileInput");
+  const img = document.getElementById("preview");
+  const vid = document.getElementById("previewVideo");
+  const x   = document.getElementById("deletePreview");
 
-      preview.src = "";
-      previewVideo.src = "";
-      preview.style.display = "none";
-      previewVideo.style.display = "none";
-      fileInput.value = "";
-      deleteBtn.style.display = "none";
-    }
+  // 1) Video sauber stoppen + Blob freigeben
+  try { vid.pause(); } catch(_) {}
+  if (vid.src && vid.src.startsWith("blob:")) {
+    try { URL.revokeObjectURL(vid.src); } catch(_) {}
+  }
+  vid.removeAttribute("src");
+  vid.load();                 // zwingt das Video zum echten Reset
+  vid.style.display = "none";
+
+  // 2) Bild leeren
+  img.removeAttribute("src");
+  img.style.display = "none";
+
+  // 3) X ausblenden
+  x.style.display = "none";
+
+  // 4) File-Input wirklich in den Urzustand bringen (Dateiname weg)
+  //    -> Klonen + ersetzen (manche Browser behalten sonst die Anzeige)
+  const newInput = oldInput.cloneNode(true); // behält id, accept, onchange
+  newInput.value = "";
+  // zur Sicherheit: onchange binden, falls inline-Attribut mal nicht greift
+  newInput.onchange = previewMedia;
+  oldInput.parentNode.replaceChild(newInput, oldInput);
+
+  // 5) Falls Modal offen war, auch schließen/aufräumen
+  const modal = document.getElementById("modal");
+  const modalImage = document.getElementById("modalImage");
+  const modalVideo = document.getElementById("modalVideo");
+  if (modal) modal.style.display = "none";
+  if (modalImage) modalImage.removeAttribute("src");
+  if (modalVideo) {
+    try { modalVideo.pause(); } catch(_) {}
+    modalVideo.removeAttribute("src");
+    modalVideo.load();
+  }
+}
 
     function openModal(type) {
       const modal = document.getElementById("modal");
@@ -692,6 +721,7 @@ if (fileInput) fileInput.value = "";
 
 </body>
 </html>
+
 
 
 
