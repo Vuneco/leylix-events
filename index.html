@@ -444,15 +444,10 @@
   <video id="previewVideo" controls onclick="openModal('video')"></video>
 
   <!-- Modal für Großansicht -->
-  <!-- Modal -->
-<div id="modal" class="modal" style="display:none" onclick="closeModal()">
-  <div class="modal-content" onclick="event.stopPropagation()">
-    <span class="close" onclick="closeModal()">×</span>
-    <img id="modalImage" style="display:none; max-width:100%; max-height:80vh;" />
-    <video id="modalVideo" controls style="display:none; max-width:100%; max-height:80vh;"></video>
+  <div id="modal" onclick="closeModal()" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.8); justify-content:center; align-items:center; z-index:1000;">
+    <img id="modalImage" style="max-width:90%; max-height:90%; display:none;" />
+    <video id="modalVideo" controls style="max-width:90%; max-height:90%; display:none;"></video>
   </div>
-</div>
-
 
 
     <input type="hidden" name="imageUrl" id="uploadedImageUrl" />
@@ -596,78 +591,78 @@ if (fileInput) fileInput.value = "";
 
   </script>
   <script>
-    function previewMedia() {
-    const fileInput = document.getElementById("fileInput");
-    const file = fileInput.files[0];
-    const preview = document.getElementById("preview");
-    const previewVideo = document.getElementById("previewVideo");
-    const deleteBtn = document.getElementById("deletePreview");
+       function previewMedia() {
+      const fileInput = document.getElementById("fileInput");
+      const file = fileInput.files[0];
+      const preview = document.getElementById("preview");
+      const previewVideo = document.getElementById("previewVideo");
+      const deleteBtn = document.getElementById("deletePreview");
 
-    if (!file) return;
+      if (!file) return;
 
-    deleteBtn.style.display = "inline";
+      const isImage = file.type.startsWith("image/");
+      const isVideo = file.type.startsWith("video/");
 
-    if (file.type.startsWith("image/")) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        preview.src = e.target.result;
-        preview.style.display = "block";
-        previewVideo.style.display = "none";
-      };
-      reader.readAsDataURL(file);
-    } else if (file.type.startsWith("video/")) {
-      const url = URL.createObjectURL(file);
-      previewVideo.src = url;
-      previewVideo.style.display = "block";
+      if (isImage) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          preview.src = e.target.result;
+          preview.style.display = "block";
+          previewVideo.style.display = "none";
+          deleteBtn.style.display = "inline-block";
+        };
+        reader.readAsDataURL(file);
+      } else if (isVideo) {
+        const url = URL.createObjectURL(file);
+        previewVideo.src = url;
+        previewVideo.style.display = "block";
+        preview.style.display = "none";
+        deleteBtn.style.display = "inline-block";
+      }
+    }
+
+    function deletePreview() {
+      const fileInput = document.getElementById("fileInput");
+      const preview = document.getElementById("preview");
+      const previewVideo = document.getElementById("previewVideo");
+      const deleteBtn = document.getElementById("deletePreview");
+
+      preview.src = "";
+      previewVideo.src = "";
       preview.style.display = "none";
+      previewVideo.style.display = "none";
+      fileInput.value = "";
+      deleteBtn.style.display = "none";
     }
-  }
 
-  function deletePreview() {
-    const preview = document.getElementById("preview");
-    const previewVideo = document.getElementById("previewVideo");
-    const fileInput = document.getElementById("fileInput");
-    const deleteBtn = document.getElementById("deletePreview");
+    function openModal(type) {
+      const modal = document.getElementById("modal");
+      const modalImage = document.getElementById("modalImage");
+      const modalVideo = document.getElementById("modalVideo");
+      const preview = document.getElementById("preview");
+      const previewVideo = document.getElementById("previewVideo");
 
-    preview.src = "";
-    preview.style.display = "none";
-    previewVideo.src = "";
-    previewVideo.style.display = "none";
-    
-    fileInput.value = "";
-    
-    deleteBtn.style.display = "none";
-  }
-
-  function openModal(type) {
-    const modal = document.getElementById("modal");
-    const modalImage = document.getElementById("modalImage");
-    const modalVideo = document.getElementById("modalVideo");
-    const preview = document.getElementById("preview");
-    const previewVideo = document.getElementById("previewVideo");
-
-    modal.style.display = "flex";
-    if (type === "image") {
-      modalImage.src = preview.src;
-      modalImage.style.display = "block";
-      modalVideo.style.display = "none";
-    } else {
-      modalVideo.src = previewVideo.src;
-      modalVideo.style.display = "block";
-      modalImage.style.display = "none";
+      modal.style.display = "flex";
+      if (type === "image") {
+        modalImage.src = preview.src;
+        modalImage.style.display = "block";
+        modalVideo.style.display = "none";
+      } else {
+        modalVideo.src = previewVideo.src;
+        modalVideo.style.display = "block";
+        modalImage.style.display = "none";
+      }
     }
-  }
 
-  function closeModal() {
-    const modal = document.getElementById("modal");
-    const modalImage = document.getElementById("modalImage");
-    const modalVideo = document.getElementById("modalVideo");
+    function closeModal() {
+      const modal = document.getElementById("modal");
+      const modalImage = document.getElementById("modalImage");
+      const modalVideo = document.getElementById("modalVideo");
 
-    modal.style.display = "none";
-    modalImage.src = "";
-    modalVideo.src = "";
-  }
-
+      modal.style.display = "none";
+      modalImage.src = "";
+      modalVideo.src = "";
+    }
 
   </script>
 
@@ -694,6 +689,7 @@ if (fileInput) fileInput.value = "";
 
 </body>
 </html>
+
 
 
 
