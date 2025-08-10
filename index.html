@@ -623,23 +623,24 @@ if (fileInput) fileInput.value = "";
     
 
  function deletePreview() {
-  // 1) Referenzen holen
-  const oldInput = document.getElementById("fileInput");
-  const delBtn   = document.getElementById("deletePreview");
+  const fileInput = document.getElementById("fileInput");
+  const deleteBtn = document.getElementById("deletePreview");
+  const preview = document.getElementById("preview");
+  const previewVideo = document.getElementById("previewVideo");
 
-    
+  // Vorschau-Elemente leeren und ausblenden
+  preview.src = "";
+  preview.style.display = "none";
+  previewVideo.src = "";
+  previewVideo.style.display = "none";
 
-  // 4) File-Input wirklich ersetzen (damit Dateiname verschwindet)
-  const newInput = oldInput.cloneNode(true); // behält id, accept, onchange
-  newInput.value = "";
-  // Falls das inline-onchange in manchen Browsern nicht greift:
-  newInput.onchange = previewMedia;
-  oldInput.parentNode.replaceChild(newInput, oldInput);
+  // File-Input zurücksetzen, damit der Dateiname verschwindet
+  fileInput.value = "";
 
-  // 5) X ausblenden
-  if (delBtn) delBtn.style.display = "none";
+  // Lösch-Button ausblenden
+  deleteBtn.style.display = "none";
 
-  // 6) Offenes Modal aufräumen (falls offen)
+  // Offenes Modal aufräumen (falls offen)
   const modal = document.getElementById("modal");
   const modalImage = document.getElementById("modalImage");
   const modalVideo = document.getElementById("modalVideo");
@@ -708,6 +709,7 @@ if (fileInput) fileInput.value = "";
 
 </body>
 </html>
+
 
 
 
