@@ -624,33 +624,18 @@ if (fileInput) fileInput.value = "";
 
  function deletePreview() {
   const fileInput = document.getElementById("fileInput");
-  const deleteBtn = document.getElementById("deletePreview");
   const preview = document.getElementById("preview");
   const previewVideo = document.getElementById("previewVideo");
+  const deleteBtn = document.getElementById("deletePreview");
 
-  // Vorschau-Elemente leeren und ausblenden
+  // Diese Zeilen leeren die Vorschau und blenden sie aus
   preview.src = "";
-  preview.style.display = "none";
   previewVideo.src = "";
+  preview.style.display = "none";
   previewVideo.style.display = "none";
 
-  // File-Input zurücksetzen, damit der Dateiname verschwindet
   fileInput.value = "";
-
-  // Lösch-Button ausblenden
   deleteBtn.style.display = "none";
-
-  // Offenes Modal aufräumen (falls offen)
-  const modal = document.getElementById("modal");
-  const modalImage = document.getElementById("modalImage");
-  const modalVideo = document.getElementById("modalVideo");
-  if (modal) modal.style.display = "none";
-  if (modalImage) modalImage.removeAttribute("src");
-  if (modalVideo) {
-    try { modalVideo.pause(); } catch (_) {}
-    modalVideo.removeAttribute("src");
-    modalVideo.load?.();
-  }
 }
 
     function openModal(type) {
@@ -709,6 +694,7 @@ if (fileInput) fileInput.value = "";
 
 </body>
 </html>
+
 
 
 
