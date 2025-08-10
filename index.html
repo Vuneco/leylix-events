@@ -459,6 +459,40 @@
   user-select: none;
   -webkit-touch-callout: none; /* iOS: kein „Bild sichern“-Callout */
 }
+    @media (min-width: 821px) {
+  .hero-rotator {
+    margin: 24px;                 /* Abstand, damit die Rundung sichtbar ist */
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 12px 32px rgba(0,0,0,.20);
+  }
+  /* Alle Layer übernehmen die Rundung */
+  .hero-rotator::after,
+  .hero-visual,
+  .hero-guard {
+    border-radius: inherit;
+  }
+}
+
+    /* Wrapper begrenzt Breite ab Desktop */
+@media (min-width: 821px) {
+  .hero-wrap {
+    max-width: 1200px;            /* taste dich an 1100–1400px ran */
+    margin: 24px auto;
+    padding: 0 16px;              /* Seiten-Gutter */
+  }
+  .hero-rotator {
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 12px 32px rgba(0,0,0,.20);
+  }
+  .hero-rotator::after,
+  .hero-visual,
+  .hero-guard {
+    border-radius: inherit;
+  }
+}
+
 
     
 
@@ -467,13 +501,13 @@
 <body>
   
   
-
+<div class="hero-wrap">
 <header class="hero-rotator" id="topHero">
   <span class="leylix-badge">Leylix</span>
   <div class="hero-visual"></div> <!-- NEU: nur für die Bild-Layer -->
   <div class="hero-guard" aria-hidden="true"></div>
 </header>
-  
+</div>  
   <h2>Anmeldformular für Events & Anbieter</h2>
 
   <form id="eventForm" action="https://script.google.com/macros/s/AKfycbx7KzOM8zw13yKrwsjraHjhDS7S2_VVECB3xA50y37jNdbDwGNY8qiUjdtdFPMJpjbnLw/exec" method="post">
@@ -913,6 +947,7 @@ const sources = [
 
 </body>
 </html>
+
 
 
 
