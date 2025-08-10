@@ -316,7 +316,7 @@
       display: none;
       cursor: pointer;
     }
-    #deletePreview {
+    #clearPreview {
       display: none;
       font-size: 18px;
       background: transparent;
@@ -437,7 +437,7 @@
 <div style="display: flex; align-items: center; gap: 10px;">
     <label for="fileInput">Bild oder Video (optional)</label>
     <input type="file" accept="image/*,video/*" id="fileInput" onchange="previewMedia()" />
-    <button id="deletePreview" type="button" onclick="deletePreview()">❌</button>
+    <button id="deletePreview" type="button" onclick="clearPreview()">❌</button>
   </div>
 
   <img id="preview" onclick="openModal('image')" />
@@ -622,26 +622,26 @@ if (fileInput) fileInput.value = "";
     }
     
 
-function deletePreview() {
+// statt function deletePreview() { ... }
+function clearPreview() {
   const fileInput = document.getElementById("fileInput");
   const preview = document.getElementById("preview");
   const previewVideo = document.getElementById("previewVideo");
   const deleteBtn = document.getElementById("deletePreview");
 
-  // src-Attribute der Vorschau-Elemente leeren
+  // ggf. ObjectURL von Video freigeben
+  if (previewVideo.src && previewVideo.src.startsWith("blob:")) {
+    URL.revokeObjectURL(previewVideo.src);
+  }
+
   preview.src = "";
   previewVideo.src = "";
-
-  // Vorschau-Elemente ausblenden
   preview.style.display = "none";
   previewVideo.style.display = "none";
-  
-  // Das Datei-Input-Feld zurücksetzen
   fileInput.value = "";
-  
-  // Den Lösch-Button ausblenden
   deleteBtn.style.display = "none";
 }
+
     function openModal(type) {
       const modal = document.getElementById("modal");
       const modalImage = document.getElementById("modalImage");
@@ -698,6 +698,7 @@ function deletePreview() {
 
 </body>
 </html>
+
 
 
 
