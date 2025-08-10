@@ -622,22 +622,19 @@ if (fileInput) fileInput.value = "";
     }
     
 
- function deletePreview() {
+function deletePreview() {
   const fileInput = document.getElementById("fileInput");
   const preview = document.getElementById("preview");
   const previewVideo = document.getElementById("previewVideo");
   const deleteBtn = document.getElementById("deletePreview");
 
-  // Diese Zeilen leeren die Vorschau und blenden sie aus
   preview.src = "";
   previewVideo.src = "";
   preview.style.display = "none";
   previewVideo.style.display = "none";
-
   fileInput.value = "";
   deleteBtn.style.display = "none";
 }
-
     function openModal(type) {
       const modal = document.getElementById("modal");
       const modalImage = document.getElementById("modalImage");
@@ -694,6 +691,7 @@ if (fileInput) fileInput.value = "";
 
 </body>
 </html>
+
 
 
 
