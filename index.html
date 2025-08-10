@@ -628,11 +628,18 @@ function deletePreview() {
   const previewVideo = document.getElementById("previewVideo");
   const deleteBtn = document.getElementById("deletePreview");
 
+  // src-Attribute der Vorschau-Elemente leeren
   preview.src = "";
   previewVideo.src = "";
+
+  // Vorschau-Elemente ausblenden
   preview.style.display = "none";
   previewVideo.style.display = "none";
+  
+  // Das Datei-Input-Feld zurücksetzen
   fileInput.value = "";
+  
+  // Den Lösch-Button ausblenden
   deleteBtn.style.display = "none";
 }
     function openModal(type) {
@@ -691,6 +698,7 @@ function deletePreview() {
 
 </body>
 </html>
+
 
 
 
