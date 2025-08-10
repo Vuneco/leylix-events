@@ -576,7 +576,7 @@
   </div>
   <div>
     <label>Uhrzeit*</label>
-    <input type="time" name="uhrzeit" required />
+    <input type="time" id="uhrzeit" name="uhrzeit" required />
   </div>
 </div>
 
@@ -943,21 +943,43 @@ const sources = [
 </script>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const dateInput = document.getElementById("datum");
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, "0");
-    const dd = String(today.getDate()).padStart(2, "0");
-    const minDate = `${yyyy}-${mm}-${dd}`;
-    dateInput.setAttribute("min", minDate);
-  });
+document.addEventListener("DOMContentLoaded", function () {
+  const dateInput = document.getElementById("datum");
+  const timeInput = document.getElementById("uhrzeit");
+
+  // Heutiges Datum setzen als Minimum
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, "0");
+  const dd = String(today.getDate()).padStart(2, "0");
+  const minDate = `${yyyy}-${mm}-${dd}`;
+  dateInput.setAttribute("min", minDate);
+
+  // Uhrzeit-Validierung abhängig vom Datum
+  function updateTimeMin() {
+    const selectedDate = dateInput.value;
+    const currentDate = `${yyyy}-${mm}-${dd}`;
+
+    if (selectedDate === currentDate) {
+      const hh = String(today.getHours()).padStart(2, "0");
+      const min = String(today.getMinutes()).padStart(2, "0");
+      timeInput.setAttribute("min", `${hh}:${min}`);
+    } else {
+      timeInput.removeAttribute("min");
+    }
+  }
+
+  dateInput.addEventListener("change", updateTimeMin);
+  updateTimeMin(); // Beim Laden prüfen
+});
 </script>
+
 
 
 
 </body>
 </html>
+
 
 
 
