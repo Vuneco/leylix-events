@@ -441,6 +441,13 @@
 }
 .hero-rotator .bg { z-index: 1; } /* bleibt gleich */
 
+.hero-guard{
+  position:absolute; inset:0;
+  z-index:3;                  /* über den Bildern, unter deinem Content (z-index:4) */
+  background: transparent;
+  pointer-events:auto;        /* fängt Touch ab, statt aufs Bild zu gehen */
+}
+.hero-content{ z-index:4; }
 
 
     
@@ -454,7 +461,7 @@
 <header class="hero-rotator" id="topHero">
   <span class="leylix-badge">Leylix</span>
   <div class="hero-visual"></div> <!-- NEU: nur für die Bild-Layer -->
-  
+  <div class="hero-guard" aria-hidden="true"></div>
 </header>
   
   <h2>Anmeldformular für Events & Anbieter</h2>
@@ -896,6 +903,7 @@ const sources = [
 
 </body>
 </html>
+
 
 
 
