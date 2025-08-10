@@ -405,24 +405,27 @@
   }
 
     /* Mobile: runde Ecken + Schatten nur im oberen Hero */
-@media (max-width: 640px) {
+@media (max-width: 820px) {
   .hero-rotator {
     margin: 12px;
     border-radius: 18px;
-    overflow: hidden;               /* wichtig für iOS: Bilder werden wirklich abgerundet */
+    overflow: hidden;
     box-shadow: 0 10px 28px rgba(0,0,0,.18);
-    height: auto;                   /* kontrolliert via aspect-ratio */
-    aspect-ratio: 16 / 9;           /* hält das Seitenverhältnis auf Phones stabil */
+    height: auto;         /* statt fester Höhe */
+    min-height: 0;        /* überschreibt die 420px Basis */
+    aspect-ratio: 16 / 9; /* hält das Verhältnis */
   }
-  /* etwas stärkere Lesbarkeitsmaske auf Mobile */
-  .hero-rotator::after {
-    background: linear-gradient(180deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.6) 100%);
+ /* Alle Overlays/Layers runden mit */
+  .hero-rotator::after,
+  .hero-visual,
+  .hero-guard {
+    border-radius: inherit;
   }
-  /* Standardbildfokus etwas höher, damit Köpfe nicht abgeschnitten sind */
-  .hero-rotator .bg {
-    object-position: 50% 35%;
-  }
+
+  /* Bild-Fokus wie gehabt */
+  .hero-rotator .bg { object-position: 50% 35%; }
 }
+
 
 /* Tablet/Desktop: wieder vollbreit ohne Rundung */
 @media (min-width: 641px) {
@@ -910,6 +913,7 @@ const sources = [
 
 </body>
 </html>
+
 
 
 
