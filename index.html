@@ -627,21 +627,7 @@ if (fileInput) fileInput.value = "";
   const oldInput = document.getElementById("fileInput");
   const delBtn   = document.getElementById("deletePreview");
 
-  // 2) Video sicher stoppen + Blob freigeben
-  const vid = document.getElementById("previewVideo");
-  try { vid.pause(); } catch (_) {}
-  if (vid && vid.src && vid.src.startsWith("blob:")) {
-    try { URL.revokeObjectURL(vid.src); } catch (_) {}
-  }
-
-  // 3) Preview-Elemente *neu aufbauen* (echter Hard-Reset)
-  const img = document.getElementById("preview");
-  const imgParent = img.parentNode; // das ist dein #previewContainer
-  // Setze den Container-Inhalt auf die ursprüngliche Markup-Variante zurück:
-  imgParent.innerHTML = `
-    <img id="preview" style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal('image')" />
-    <video id="previewVideo" controls style="max-width: 300px; margin-top: 10px; display: none; cursor: pointer;" onclick="openModal('video')"></video>
-  `;
+    
 
   // 4) File-Input wirklich ersetzen (damit Dateiname verschwindet)
   const newInput = oldInput.cloneNode(true); // behält id, accept, onchange
@@ -722,6 +708,7 @@ if (fileInput) fileInput.value = "";
 
 </body>
 </html>
+
 
 
 
