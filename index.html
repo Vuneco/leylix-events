@@ -311,15 +311,113 @@
       color: red;
     }
 
+     /* Hero-Bereich (nur oben) */
+  .hero-rotator {
+    position: relative;
+    height: clamp(320px, 48vh, 560px);
+    min-height: 320px;
+    overflow: hidden;
+    isolation: isolate;
+    background: #0a0a0a;
+  }
+
+  /* Bilder als Layer */
+  .hero-rotator .bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transform: scale(1.05);
+    transition: opacity 1200ms ease-in-out;
+    will-change: opacity, transform;
+    animation: hero-kenburns 12s ease-in-out infinite;
+    animation-play-state: paused; /* nur aktives Bild animiert */
+  }
+  .hero-rotator .bg.active {
+    opacity: 1;
+    animation-play-state: running;
+  }
+  /* leichte Gegenbewegung für jedes zweite Bild */
+  .hero-rotator .bg.alt {
+    animation-name: hero-kenburns-alt;
+  }
+
+  /* Lesbarkeits-Overlay */
+  .hero-rotator::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.15) 60%, rgba(0,0,0,0.55) 100%);
+    z-index: 2;
+  }
+
+  /* Leylix-Label (Brand Badge) */
+  .leylix-badge {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 3;
+    font: 600 13px/1.1 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: #fff;
+    background: rgba(0,0,0,.55);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255,255,255,.18);
+    border-radius: 999px;
+    padding: 8px 12px;
+  }
+
+  /* Optionaler Content über dem Hero */
+  .hero-content {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: 24px;
+  }
+  .hero-content h1 {
+    margin: 0;
+    color: #fff;
+    font-size: clamp(22px, 4.2vw, 44px);
+    line-height: 1.1;
+    text-shadow: 0 8px 30px rgba(0,0,0,.55);
+  }
+
+  /* Ken-Burns Variationen */
+  @keyframes hero-kenburns {
+    0%   { transform: scale(1.05) translate3d(0, 0, 0); }
+    100% { transform: scale(1.12) translate3d(1.6%, 1.6%, 0); }
+  }
+  @keyframes hero-kenburns-alt {
+    0%   { transform: scale(1.05) translate3d(0, 0, 0); }
+    100% { transform: scale(1.12) translate3d(-1.6%, -1.6%, 0); }
+  }
+
+  /* Accessibility: reduziert Bewegung */
+  @media (prefers-reduced-motion: reduce) {
+    .hero-rotator .bg { animation: none; }
+  }
+
     
 
   </style>
 </head>
 <body>
   
-    
+  <header class="hero-rotator" id="topHero">
+  <span class="leylix-badge">Leylix</span>
+  <div class="hero-content" aria-hidden="true">
+    <!-- Optionaler Titel; kannst du entfernen -->
+    <h1>Entdecke neue Events. Live & nah.</h1>
+  </div>
+  <!-- Die <img>-Layer werden per JS eingefügt -->
 </header>
-  
 
   <h2>Anmeldformular für Events & Anbieter</h2>
 
@@ -675,13 +773,74 @@ function clearPreview() {
 
   requestAnimationFrame(raf);
 </script>
+<!-- ====== BODY END: Script ====== -->
+<script>
+  (function () {
+    // 1) Deine Bilder hier eintragen (5–6 Stück empfohlen)
+    const sources = [
+      "/assets/hero/hero-1.jpg",
+      "/assets/hero/hero-2.jpg",
+      "/assets/hero/hero-3.jpg",
+      "/assets/hero/hero-4.jpg",
+      "/assets/hero/hero-5.jpg",
+      "/assets/hero/hero-6.jpg"
+    ];
 
+    const hero = document.getElementById("topHero");
+    const frag = document.createDocumentFragment();
+    const imgs = sources.map((src, i) => {
+      const img = new Image();
+      img.className = "bg" + (i % 2 ? " alt" : "");
+      img.alt = ""; // dekorativ
+      img.decoding = "async";
+      img.loading = i === 0 ? "eager" : "lazy";
+      img.src = src;
+      frag.appendChild(img);
+      return img;
+    });
+    hero.appendChild(frag);
+
+    // 2) Startzustand
+    let index = 0;
+    if (imgs.length) imgs[0].classList.add("active");
+
+    // 3) Crossfade alle X Sekunden
+    const intervalMs = 5000; // 5s – ändere nach Wunsch
+    let timer = null;
+
+    const next = () => {
+      const current = imgs[index];
+      index = (index + 1) % imgs.length;
+      const upcoming = imgs[index];
+      current && current.classList.remove("active");
+      upcoming && upcoming.classList.add("active");
+    };
+
+    // 4) Pause wenn nicht sichtbar (Performance)
+    const start = () => { if (!timer) timer = setInterval(next, intervalMs); };
+    const stop  = () => { if (timer) { clearInterval(timer); timer = null; } };
+
+    const io = new IntersectionObserver(
+      entries => entries.forEach(e => e.isIntersecting ? start() : stop()),
+      { threshold: 0.2 }
+    );
+    io.observe(hero);
+
+    // Falls der Hero direkt sichtbar ist, sofort starten
+    if (hero.getBoundingClientRect().top < window.innerHeight * 0.8) start();
+
+    // 5) Optional: Preload im <head> hinzufügen (SEO/Perf)
+    // -> <link rel="preload" as="image" href="/assets/hero/hero-1.jpg">
+    // ... für die ersten 2–3 Bilder reicht meist aus.
+  })();
+</script>
 
 
 
 
 </body>
 </html>
+
 
 
 
