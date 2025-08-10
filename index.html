@@ -404,21 +404,59 @@
     .hero-rotator .bg { animation: none; }
   }
 
+    /* Mobile: runde Ecken + Schatten nur im oberen Hero */
+@media (max-width: 640px) {
+  .hero-rotator {
+    margin: 12px;
+    border-radius: 18px;
+    overflow: hidden;               /* wichtig für iOS: Bilder werden wirklich abgerundet */
+    box-shadow: 0 10px 28px rgba(0,0,0,.18);
+    height: auto;                   /* kontrolliert via aspect-ratio */
+    aspect-ratio: 16 / 9;           /* hält das Seitenverhältnis auf Phones stabil */
+  }
+  /* etwas stärkere Lesbarkeitsmaske auf Mobile */
+  .hero-rotator::after {
+    background: linear-gradient(180deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.6) 100%);
+  }
+  /* Standardbildfokus etwas höher, damit Köpfe nicht abgeschnitten sind */
+  .hero-rotator .bg {
+    object-position: 50% 35%;
+  }
+}
+
+/* Tablet/Desktop: wieder vollbreit ohne Rundung */
+@media (min-width: 641px) {
+  .hero-rotator {
+    margin: 0;
+    border-radius: 0;
+    aspect-ratio: auto;
+    height: clamp(320px, 48vh, 560px);
+  }
+}
+    .hero-visual {
+  position: absolute; inset: 0;
+  overflow: hidden; 
+  border-radius: inherit; /* übernimmt die Rundung vom Hero */
+  z-index: 1;             /* unter Badge/Content */
+}
+.hero-rotator .bg { z-index: 1; } /* bleibt gleich */
+
+
+
     
 
   </style>
 </head>
 <body>
   
-  <header class="hero-rotator" id="topHero">
-  <span class="leylix-badge">Leylix</span>
-  <div class="hero-content" aria-hidden="true">
-    <!-- Optionaler Titel; kannst du entfernen -->
-    
-  </div>
-  <!-- Die <img>-Layer werden per JS eingefügt -->
-</header>
+  
 
+<header class="hero-rotator" id="topHero">
+  <span class="leylix-badge">Leylix</span>
+  <div class="hero-visual"></div> <!-- NEU: nur für die Bild-Layer -->
+  
+</header>
+  
   <h2>Anmeldformular für Events & Anbieter</h2>
 
   <form id="eventForm" action="https://script.google.com/macros/s/AKfycbx7KzOM8zw13yKrwsjraHjhDS7S2_VVECB3xA50y37jNdbDwGNY8qiUjdtdFPMJpjbnLw/exec" method="post">
@@ -777,28 +815,46 @@ function clearPreview() {
 <script>
   (function () {
     // 1) Deine Bilder hier eintragen (5–6 Stück empfohlen)
-    const sources = [
-      "/assets/imgevent-poster.png",
-      "/assets/WebEventPoster.png",
-      "/assets/hero/hero-3.jpg",
-      "/assets/hero/hero-4.jpg",
-      "/assets/hero/hero-5.jpg",
-      "/assets/hero/hero-6.jpg"
-    ];
+    // neu – Beispiel mit Fokus & responsive srcset:
+const sources = [
+  {
+    src: "/assets/WebEventPoster.png",
+    srcset: "/assets/WebEventPoster.png 640w, /assets/WebEventPoster.png 960w, /assets/WebEventPoster.png 1280w, /assets/WebEventPoster.png 1920w",
+    sizes: "(max-width: 640px) 100vw, (max-width: 1024px) 960px, 1280px",
+    focal: "50% 30%" // Mitte leicht nach oben
+  },
+  {
+    src: "/assets/imgevent-poster.png",
+    srcset: "/assets/imgevent-poster.png 640w, /assets/imgevent-poster.png 960w, /assets/imgevent-poster.png 1280w, /assets/imgevent-poster.png 1920w",
+    sizes: "(max-width: 640px) 100vw, (max-width: 1024px) 960px, 1280px",
+    focal: "50% 40%"
+  },
+  // ...weitere Bilder
+];
 
     const hero = document.getElementById("topHero");
     const frag = document.createDocumentFragment();
-    const imgs = sources.map((src, i) => {
-      const img = new Image();
-      img.className = "bg" + (i % 2 ? " alt" : "");
-      img.alt = ""; // dekorativ
-      img.decoding = "async";
-      img.loading = i === 0 ? "eager" : "lazy";
-      img.src = src;
-      frag.appendChild(img);
-      return img;
-    });
-    hero.appendChild(frag);
+     // B) NEU: map((item, i) => ...) – ersetzt den alten map-Block
+  const imgs = sources.map((item, i) => {
+    const img = new Image();
+    img.className = "bg" + (i % 2 ? " alt" : "");
+    img.alt = "";
+    img.decoding = "async";
+    img.loading = i === 0 ? "eager" : "lazy";
+    img.fetchPriority = i === 0 ? "high" : "auto";
+
+    img.src = item.src;
+    if (item.srcset) img.srcset = item.srcset;
+    if (item.sizes)  img.sizes  = item.sizes;
+    if (item.focal)  img.style.objectPosition = item.focal;
+
+    frag.appendChild(img);
+    return img;
+  });
+
+  // C) APPEND: Wenn mit Wrapper, sonst hero.appendChild(frag)
+  (hero.querySelector(".hero-visual") || hero).appendChild(frag);
+
 
     // 2) Startzustand
     let index = 0;
@@ -840,6 +896,7 @@ function clearPreview() {
 
 </body>
 </html>
+
 
 
 
