@@ -493,6 +493,34 @@
   }
 }
 
+    .custom-alert {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  z-index: 10000;
+  text-align: center;
+  max-width: 350px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+.custom-alert img {
+  max-height: 60px;
+  margin: 5px;
+}
+.custom-alert-footer {
+  margin-top: 15px;
+  font-size: 0.85em;
+  color: #555;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate(-50%, -60%); }
+  to { opacity: 1; transform: translate(-50%, -50%); }
+}
+
 
     
 
@@ -635,6 +663,13 @@
 
   </form>
 
+  <div id="customAlert" class="custom-alert" style="display:none;">
+  <img src="/assets/leylix-icon.png" alt="Leylix Logo">
+  <img src="/assets/vunecoin-logo.png" alt="VuneCoin Logo">
+  <p id="customAlertMessage">Your message here</p>
+  <div class="custom-alert-footer">Powered by Leylix</div>
+</div>
+
   <script>
     function updateFormSections() {
   const type = document.getElementById("formType").value;
@@ -691,7 +726,7 @@ if (file.size > MAX_FILE_SIZE) {
         });
 
         if (uploadResponse.ok) {
-          alert("✅ Upload erfolgreich!");
+          showCustomAlert("✅ Upload erfolgreich!");
           const cleanUrl = uploadUrl.split('?')[0];
           return cleanUrl;
         } else {
@@ -729,7 +764,7 @@ if (file.size > MAX_FILE_SIZE) {
     body: formData
   })
   .then(() => {
-    alert("✅ Erfolgreich gesendet!");
+   showCustomAlert("✅ Upload erfolgreich!");
 
     // Formular zurücksetzen
     form.reset();
@@ -974,11 +1009,20 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
-
+<script>
+function showCustomAlert(message) {
+  document.getElementById("customAlertMessage").textContent = message;
+  document.getElementById("customAlert").style.display = "block";
+  setTimeout(() => {
+    document.getElementById("customAlert").style.display = "none";
+  }, 3000);
+}
+</script>
 
 
 </body>
 </html>
+
 
 
 
