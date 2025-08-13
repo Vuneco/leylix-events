@@ -1044,7 +1044,7 @@ let alertTimeout;
 
 function showCustomAlert(message, duration = 3000) {
   const alertBox = document.getElementById("customAlert");
-  document.getElementById("customAlertMessage").textContent = message;
+  document.getElementById("customAlertMessage").innerHTML = message;
   alertBox.style.display = "block";
 
   // Falls schon ein Alert läuft, stoppen
@@ -1062,6 +1062,7 @@ function showCustomAlert(message, duration = 3000) {
 
 </body>
 </html>
+
 
 
 
