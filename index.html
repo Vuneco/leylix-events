@@ -727,7 +727,7 @@ if (file.size > MAX_FILE_SIZE) {
         });
 
         if (uploadResponse.ok) {
-          showCustomAlert("✅ Upload erfolgreich!");
+          showCustomAlert("✅ Upload erfolgreich!", 10000);
           const cleanUrl = uploadUrl.split('?')[0];
           return cleanUrl;
         } else {
@@ -765,7 +765,7 @@ if (file.size > MAX_FILE_SIZE) {
     body: formData
   })
   .then(() => {
-   showCustomAlert("✅ Upload erfolgreich!");
+   showCustomAlert("✅ Upload erfolgreich!", 3000);
 
     // Formular zurücksetzen
     form.reset();
@@ -1011,18 +1011,20 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 <script>
-function showCustomAlert(message) {
+function showCustomAlert(message, duration = 3000) {
   document.getElementById("customAlertMessage").textContent = message;
   document.getElementById("customAlert").style.display = "block";
   setTimeout(() => {
     document.getElementById("customAlert").style.display = "none";
-  }, 3000);
+  }, duration);
 }
 </script>
 
+  
 
 </body>
 </html>
+
 
 
 
