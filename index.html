@@ -750,7 +750,7 @@ if (file.size > MAX_FILE_SIZE) {
         });
 
         if (uploadResponse.ok) {
-          showCustomAlert("Lade doch die Leylix"<b>"App runter!"<br>"Hast du viel mehr Möglichkeiten!", 10000);
+          showCustomAlert("Lade doch die LeylixApp runter!<br>Hast du viel mehr Möglichkeiten!", 10000);
           const cleanUrl = uploadUrl.split('?')[0];
           return cleanUrl;
         } else {
@@ -788,7 +788,7 @@ if (file.size > MAX_FILE_SIZE) {
     body: formData
   })
   .then(() => {
-   showCustomAlert("Lade doch die Leylix"<b>"App runter!"<br>"Hast du viel mehr Möglichkeiten!", 7000);
+   showCustomAlert("Lade doch die LeylixApp runter!<br>Hast du viel mehr Möglichkeiten!", 7000);
 
     // Formular zurücksetzen
     form.reset();
@@ -1062,6 +1062,7 @@ function showCustomAlert(message, duration = 3000) {
 
 </body>
 </html>
+
 
 
 
