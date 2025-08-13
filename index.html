@@ -765,7 +765,7 @@ if (file.size > MAX_FILE_SIZE) {
     body: formData
   })
   .then(() => {
-   showCustomAlert("✅ Upload erfolgreich!", 3000);
+   showCustomAlert("✅ Upload erfolgreich!", 7000);
 
     // Formular zurücksetzen
     form.reset();
@@ -1011,19 +1011,29 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 <script>
+let alertTimeout;
+
 function showCustomAlert(message, duration = 3000) {
+  const alertBox = document.getElementById("customAlert");
   document.getElementById("customAlertMessage").textContent = message;
-  document.getElementById("customAlert").style.display = "block";
-  setTimeout(() => {
-    document.getElementById("customAlert").style.display = "none";
+  alertBox.style.display = "block";
+
+  // Falls schon ein Alert läuft, stoppen
+  clearTimeout(alertTimeout);
+
+  // Timer starten
+  alertTimeout = setTimeout(() => {
+    alertBox.style.display = "none";
   }, duration);
 }
+
 </script>
 
   
 
 </body>
 </html>
+
 
 
 
