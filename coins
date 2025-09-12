@@ -17,7 +17,7 @@
     --center-size: 170px;
 
     /* Pfade für Logos */
-    --coin-logo: url("VuneCoinLogo.png");
+    --coin-logo: url("assets/VuneCoinLogo4x3@3x 3.png");
     --center-logo: url("LeylixLogo.png");
 
     --bg: #0b0b12;
