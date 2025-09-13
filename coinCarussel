@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>VuneCoin Orbit – Clean</title>
+<style>
+  :root{
+    --size: 620px;          /* Orbit Durchmesser */
+    --tilt: 70deg;          /* Neigung Orbit */
+    --orbit-speed: 55s;     /* Drehgeschwindigkeit Orbit */
+    --coin-count: 24;       /* Anzahl Coins */
+    --coin-size: 96px;      /* Durchmesser Coin */
+    --coin-thick: 34px;     /* Dicke/Höhe Coin */
+    --coin-spin: 10s;       /* Eigendrehung */
+
+    --center-size: 170px;
+
+    /* Pfade für Logos */
+    --coin-logo: url("VuneCoinLogo.png");
+    --center-logo: url("LeylixLogo.png");
+
+    --bg: #0b0b12;
+  }
+
+  html,body{
+    height:100%; margin:0;
+    background: radial-gradient(1100px 1100px at 30% 20%, #1b1b2d, var(--bg));
+    display:grid; place-items:center;
+  }
+
+  .stage{ perspective: 1400px; }
+  .tilt{ transform: rotateX(var(--tilt)); transform-style: preserve-3d; }
+
+  .orbit{
+    position:relative; width:var(--size); height:var(--size);
+    transform-style: preserve-3d;
+    animation: orbitSpin var(--orbit-speed) linear infinite;
+  }
+  @keyframes orbitSpin { to { transform: rotate(360deg); } }
+
+  #coins{ position:absolute; inset:0; transform-style: preserve-3d; }
+
+  .coin{
+    position:absolute; left:50%; top:50%;
+    width:var(--coin-size); height:var(--coin-size);
+    margin: calc(var(--coin-size)/-2);
+    transform-style: preserve-3d;
+  }
+
+  .coin3d{
+    position:absolute; inset:0; transform-style: preserve-3d;
+    animation: spinY var(--coin-spin) linear infinite;
+  }
+  @keyframes spinY { to { transform: rotateY(360deg); } }
+ 
+
+  /* Rand */
+  .edge{ position:absolute; inset:0; transform-style: preserve-3d; }
+  .edge span{
+    position:absolute; top:calc(50% - var(--coin-thick)/2); left:50%;
+    width: calc(3.14159 * var(--coin-size) / 64);
+    height: var(--coin-thick);
+    background: linear-gradient(180deg, #f6d87c, #c78322);
+    transform-origin: left center;
+  }
+
+  /* Mitte: Leylix */
+  .center{
+    position:absolute; left:50%; top:50%;
+    width:var(--center-size); height:var(--center-size);
+    transform: translate(-50%,-50%);
+    border-radius:50%;
+    background: var(--center-logo) center/contain no-repeat;
+    animation: centerSpin 18s linear infinite;
+  }
+  @keyframes centerSpin { to { transform: translate(-50%,-50%) rotate(360deg); } }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="tilt">
+      <div class="orbit" id="orbit">
+        <div id="coins"></div>
+        <div class="center"></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const COUNT = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--coin-count')) || 24;
+  const coinsWrap = document.getElementById('coins');
+
+  function layout(){
+    const size = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--size'));
+    const r = size/2 - 22;
+    coinsWrap.innerHTML = '';
+
+    for(let i=0;i<COUNT;i++){
+      const a = (i / COUNT) * Math.PI * 2;
+      const x = Math.cos(a) * r;
+      const y = Math.sin(a) * r;
+
+      const coin = document.createElement('div');
+      coin.className = 'coin';
+      coin.style.transform = `translate(-50%,-50%) translate(${x}px,${y}px) rotate(${a}rad)`;
+
+      const body = document.createElement('div');
+      body.className = 'coin3d';
+
+      const front = document.createElement('div'); front.className = 'face';
+      const back  = document.createElement('div'); back.className  = 'back';
+
+      const edge = document.createElement('div'); edge.className = 'edge';
+      const segs = 64;
+      for(let s=0; s<segs; s++){
+        const span = document.createElement('span');
+        span.style.transform = `rotateY(${(360/segs)*s}deg) translateZ(calc(var(--coin-size)/2))`;
+        edge.appendChild(span);
+      }
+
+      body.append(front, edge, back);
+      coin.appendChild(body);
+      coinsWrap.appendChild(coin);
+    }
+  }
+  layout();
+  addEventListener('resize', layout);
+</script>
+</body>
+</html>
